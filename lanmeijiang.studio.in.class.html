@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>蓝莓酱工作室 - 内部界面</title>
+    <!-- 引入外部资源 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- 配置Tailwind自定义颜色和字体 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4A90E2',
+                        secondary: '#5C6BC0',
+                        accent: '#81D4FA',
+                        light: '#E3F2FD',
+                        dark: '#1A237E'
+                    },
+                    fontFamily: {
+                        fun: ['Comic Sans MS', 'Marker Felt', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <!-- 自定义工具类 -->
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .bounce-hover {
+                transition: transform 0.3s ease;
+            }
+            .bounce-hover:hover {
+                transform: translateY(-5px);
+            }
+            .sidebar-item-active {
+                background-color: rgba(255,255,255,0.1);
+                border-left: 4px solid #81D4FA;
+            }
+        }
+    </style>
+    
+    <style>
+        /* 基础动画效果 */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        /* 页面加载动画 */
+        @keyframes slideInLeft {
+            from {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideInUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes fadeInScale {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+        
+        @keyframes wiggle {
+            0%, 100% {
+                transform: rotate(0deg);
+            }
+            25% {
+                transform: rotate(-3deg);
+            }
+            75% {
+                transform: rotate(3deg);
+            }
+        }
+        
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        @keyframes magnetic {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-2px);
+            }
+        }
+        
+        @keyframes ripple {
+            from {
+                transform: scale(0);
+                opacity: 1;
+            }
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+        
+        /* 动画类 */
+        .animate-on-load {
+            animation: slideInUp 0.8s ease-out forwards;
+        }
+        
+        .animate-delay-1 {
+            animation-delay: 0.2s;
+        }
+        
+        .animate-delay-2 {
+            animation-delay: 0.4s;
+        }
+        
+        .animate-delay-3 {
+            animation-delay: 0.6s;
+        }
+        
+        .animate-delay-4 {
+            animation-delay: 0.8s;
+        }
+        
+        .fadeInScale {
+            animation: fadeInScale 0.6s ease-out;
+        }
+        
+        .slideInLeft {
+            animation: slideInLeft 0.8s ease-out;
+        }
+        
+        .slideInUp {
+            animation: slideInUp 0.8s ease-out;
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        .wiggle {
+            animation: wiggle 1s ease-in-out infinite;
+        }
+        
+        .rotate {
+            animation: rotate 2s linear infinite;
+        }
+        
+        .magnetic {
+            animation: magnetic 2s ease-in-out infinite;
+        }
+        
+        .btn-enhanced {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-enhanced::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            transition: width 0.6s, height 0.6s;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+        }
+        
+        .btn-enhanced:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .btn-enhanced > * {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .ripple-effect {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ripple-effect::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .ripple-effect:active::after {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        
+        .neon-glow {
+            box-shadow: 0 0 20px rgba(129, 212, 250, 0.3);
+        }
+        
+        .neon-glow:hover {
+            box-shadow: 0 0 30px rgba(129, 212, 250, 0.5);
+        }
+        
+        .elastic {
+            animation: elastic 1s ease-in-out;
+        }
+        
+        @keyframes elastic {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        .flipInX {
+            animation: flipInX 0.8s ease-out;
+        }
+        
+        @keyframes flipInX {
+            from {
+                transform: perspective(400px) rotateX(90deg);
+                opacity: 0;
+            }
+            to {
+                transform: perspective(400px) rotateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .rainbow-text {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7, #dda0dd);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: rainbow 3s ease-in-out infinite;
+        }
+        
+        @keyframes rainbow {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+        
+        .content-transition {
+            transition: all 0.3s ease;
+        }
+        
+        .scroll-animate {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+        
+        .scroll-animate.in-view {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* 粒子背景 */
+        .particles-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .particle {
+            position: absolute;
+            background: rgba(129, 212, 250, 0.6);
+            border-radius: 50%;
+            animation: particle-float 6s ease-in-out infinite;
+        }
+        
+        @keyframes particle-float {
+            0%, 100% {
+                transform: translateY(0px) translateX(0px);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(-100px) translateX(20px);
+                opacity: 0.8;
+            }
+        }
+        
+        /* 滚动条样式 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: rgba(129, 212, 250, 0.3);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(129, 212, 250, 0.5);
+        }
+        
+        /* 平滑滚动 */
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-primary to-secondary text-white font-fun min-h-screen flex overflow-hidden">
+    <!-- 侧边导航 -->
+    <aside id="sidebar" class="w-64 bg-dark/80 backdrop-blur-md h-screen fixed left-0 top-0 z-30 transition-all duration-300">
+        <div class="p-6 border-b border-white/10">
+            <div class="flex items-center space-x-2">
+                <div class="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center">
+                    <i class="fa fa-paint-brush text-2xl text-accent"></i>
+                </div>
+                <span class="text-2xl font-bold tracking-tight">蓝莓酱工作室</span>
+            </div>
+            <p class="text-white/60 mt-2 text-sm">内部管理系统</p>
+        </div>
+        
+        <nav class="py-6 px-4">
+            <div class="space-y-1 mb-8">
+                <h3 class="text-xs uppercase text-white/50 font-semibold px-3 mb-3">主导航</h3>
+                <div class="sidebar-item sidebar-item-active card-hover" data-target="projects">
+                    <a href="#projects" class="flex items-center space-x-3 px-3 py-3 rounded-lg transition-all text-lg text-accent ripple-effect">
+                        <i class="fa fa-cubes w-5 text-center text-accent pulse"></i>
+                        <span>作品管理</span>
+                    </a>
+                </div>
+                <div class="sidebar-item card-hover" data-target="members">
+                    <a href="#members" class="flex items-center space-x-3 px-3 py-3 rounded-lg hover:bg-white/5 transition-all text-lg text-white/70 ripple-effect">
+                        <i class="fa fa-users w-5 text-center text-white/70"></i>
+                        <span>成员管理</span>
+                    </a>
+                </div>
+                <div class="sidebar-item card-hover" data-target="gallery">
+                    <a href="#gallery" class="flex items-center space-x-3 px-3 py-3 rounded-lg hover:bg-white/5 transition-all text-lg text-white/70 ripple-effect">
+                        <i class="fa fa-picture-o w-5 text-center text-white/70"></i>
+                        <span>作品库</span>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="space-y-1">
+                <h3 class="text-xs uppercase text-white/50 font-semibold px-3 mb-3 animate-on-load animate-delay-3">系统</h3>
+                <a href="#settings" class="flex items-center space-x-3 px-3 py-3 rounded-lg hover:bg-white/5 transition-all text-lg ripple-effect">
+                    <i class="fa fa-cog w-5 text-center wiggle"></i>
+                    <span>设置</span>
+                </a>
+                <a href="#help" class="flex items-center space-x-3 px-3 py-3 rounded-lg hover:bg-white/5 transition-all text-lg ripple-effect">
+                    <i class="fa fa-question-circle w-5 text-center pulse"></i>
+                    <span>帮助中心</span>
+                </a>
+            </div>
+        </nav>
+        
+        <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-white/10 animate-on-load animate-delay-4">
+            <div class="flex items-center space-x-3 p-3 rounded-lg bg-white/5 card-hover">
+                <img src="https://picsum.photos/id/1/100/100" alt="用户头像" class="w-10 h-10 rounded-full object-cover border-2 border-accent">
+                <div class="flex-1 min-w-0">
+                    <h4 class="font-semibold truncate">管理员</h4>
+                    <p class="text-white/60 text-xs truncate">蓝莓酱</p>
+                </div>
+                <button class="text-white/50 hover:text-white transition-colors magnetic">
+                    <i class="fa fa-sign-out rotate"></i>
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- 主内容区 -->
+    <main class="flex-1 ml-64 overflow-y-auto h-screen p-8">
+        <!-- 顶部信息栏 -->
+        <div class="flex justify-between items-center mb-8">
+            <div class="scroll-animate slideInLeft">
+                <h1 class="text-[clamp(1.5rem,3vw,2.5rem)] font-bold">作品管理</h1>
+                <p class="text-white/70">欢迎回来，今天是 <span id="current-date" class="pulse"></span></p>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button class="relative p-2 rounded-full bg-white/5 hover:bg-white/10 transition-colors card-hover ripple-effect">
+                    <i class="fa fa-bell wiggle"></i>
+                    <span class="absolute top-1 right-1 w-2 h-2 bg-accent rounded-full pulse"></span>
+                </button>
+                <button class="bg-accent hover:bg-accent/90 text-dark px-4 py-2 rounded-full font-medium transition-all bounce-hover flex items-center space-x-2 btn-enhanced magnetic">
+                    <i class="fa fa-plus rotate"></i>
+                    <span>新建项目</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 项目管理内容已设为默认显示 -->
+
+        <!-- 作品管理内容 -->
+        <section id="projects-content" class="content-section scroll-animate fadeInScale">
+            <div class="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/5 mb-8 card-hover">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold">作品管理</h2>
+                    <div class="flex space-x-4">
+                        <button id="show-import-panel-btn" class="bg-accent hover:bg-accent/90 text-dark px-4 py-2 rounded-full font-medium transition-all bounce-hover flex items-center space-x-2 btn-enhanced magnetic ripple-effect">
+                            <i class="fa fa-upload wiggle"></i>
+                            <span>导入作品</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 导入功能面板 -->
+                <div id="import-panel" class="bg-[#6ab3ff] rounded-xl p-6 border border-white/5 mb-8 scroll-animate slideInUp">
+                    <h3 class="text-xl font-bold mb-6">导入作品</h3>
+                    
+                    <div class="space-y-6">
+                        <!-- 文件上传区域 -->
+                        <div id="drop-area" class="border-2 border-dashed border-white/20 rounded-lg p-8 text-center hover:border-accent transition-all cursor-pointer bg-white/5 card-hover">
+                            <i class="fa fa-cloud-upload text-5xl text-accent mb-4 floating pulse"></i>
+                            <h3 class="text-xl font-semibold mb-2">拖放文件到此处或点击上传</h3>
+                            <p class="text-white/60 mb-4">支持图片、音频、视频、文档、代码等格式文件</p>
+                            <button id="file-upload-btn" class="bg-accent hover:bg-accent/90 text-dark px-6 py-2 rounded-full font-medium transition-all bounce-hover btn-enhanced magnetic">
+                                选择文件
+                            </button>
+                            <input type="file" class="hidden" id="file-upload-input" accept=".png,.jpg,.jpeg,.gif,.mp3,.m4a,.mov,.mp4,.html,.css,.js,.pdf,.zip,.csv,.xlsx,.xls,.json">
+                            <div id="file-name-display" class="mt-3"></div>
+                        </div>
+
+                        <!-- 导入设置 -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="scroll-animate slideInLeft">
+                                <label class="block text-white/80 mb-2 font-medium">导入类型</label>
+                                <select id="import-type" class="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-accent transition-all card-hover">
+                                    <option>项目数据</option>
+                                    <option>成员信息</option>
+                                    <option>活动安排</option>
+                                    <option>作品信息</option>
+                                </select>
+                            </div>
+                            <div class="scroll-animate slideInLeft animate-delay-1">
+                                <label class="block text-white/80 mb-2 font-medium">数据编码</label>
+                                <select id="data-encoding" class="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-accent transition-all card-hover">
+                                    <option>UTF-8</option>
+                                    <option>GBK</option>
+                                    <option>GB2312</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center space-x-2 scroll-animate slideInUp">
+                            <input type="checkbox" id="override-existing" class="w-4 h-4 bg-white/10 border border-white/20 rounded focus:ring-accent text-accent">
+                            <label for="override-existing" class="text-white/80">覆盖现有数据</label>
+                        </div>
+
+                        <!-- 操作按钮 -->
+                        <div class="flex justify-end space-x-4 pt-4 border-t border-white/10 scroll-animate slideInUp">
+                            <button id="cancel-import-btn" class="px-6 py-2 rounded-full border border-white/20 hover:bg-white/10 transition-all card-hover ripple-effect">
+                                取消
+                            </button>
+                            <button id="start-import-btn" class="bg-accent hover:bg-accent/90 text-dark px-6 py-2 rounded-full font-medium transition-all bounce-hover flex items-center space-x-2 btn-enhanced magnetic">
+                                <i class="fa fa-check pulse"></i>
+                                <span>开始导入</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 作品列表预览 -->
+                <div class="text-center py-12 scroll-animate fadeInScale">
+                    <div class="mb-4 text-white/60">
+                        <i class="fa fa-picture-o text-5xl wiggle"></i>
+                    </div>
+                    <p class="text-lg mb-6">导入后的作品将显示在这里</p>
+                    <p class="text-white/60 text-sm">上传成功后可以在作品库中查看和管理所有作品</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 成员管理内容 -->
+        <section id="members-content" class="content-section hidden scroll-animate fadeInScale">
+            <div class="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/5 mb-8 card-hover">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold">成员管理</h2>
+                    <div class="flex space-x-4">
+                        <div class="relative">
+                            <input type="text" placeholder="搜索成员..." class="bg-white/10 border border-white/20 rounded-lg pl-10 pr-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-accent w-64 card-hover">
+                            <i class="fa fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-white/50"></i>
+                        </div>
+                        <button id="add-member-btn" class="bg-accent hover:bg-accent/90 text-dark px-4 py-2 rounded-full font-medium transition-all bounce-hover flex items-center space-x-2 btn-enhanced magnetic ripple-effect">
+                            <i class="fa fa-user-plus wiggle"></i>
+                            <span>添加成员</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/5 hover:bg-white/10 transition-all card-hover">
+                        <div class="flex items-center space-x-4 mb-4">
+                            <img src="https://picsum.photos/id/64/100/100" alt="小明" class="w-16 h-16 rounded-full object-cover border-2 border-accent">
+                            <div>
+                                <h3 class="text-xl font-bold">小明</h3>
+                                <p class="text-white/60 text-sm">项目负责人</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4 mb-4">
+                            <div class="flex items-center space-x-2">
+                                <i class="fa fa-envelope text-white/50 pulse"></i>
+                                <span class="text-sm text-white/80">xiaoming@example.com</span>
+                            </div>
+                        </div>
+                        <div class="flex justify-between">
+                            <button class="member-edit-btn px-3 py-1.5 rounded-full border border-white/20 hover:bg-white/10 transition-all text-sm card-hover ripple-effect">编辑</button>
+                            <button class="member-delete-btn px-3 py-1.5 rounded-full border border-red-300/30 text-red-300 hover:bg-red-300/10 transition-all text-sm card-hover ripple-effect">删除</button>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/5 hover:bg-white/10 transition-all card-hover">
+                        <div class="flex items-center space-x-4 mb-4">
+                            <img src="https://picsum.photos/id/65/100/100" alt="小红" class="w-16 h-16 rounded-full object-cover border-2 border-primary/50">
+                            <div>
+                                <h3 class="text-xl font-bold">小红</h3>
+                                <p class="text-white/60 text-sm">设计师</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4 mb-4">
+                            <div class="flex items-center space-x-2">
+                                <i class="fa fa-envelope text-white/50 pulse"></i>
+                                <span class="text-sm text-white/80">xiaohong@example.com</span>
+                            </div>
+                        </div>
+                        <div class="flex justify-between">
+                            <button class="member-edit-btn px-3 py-1.5 rounded-full border border-white/20 hover:bg-white/10 transition-all text-sm card-hover ripple-effect">编辑</button>
+                            <button class="member-delete-btn px-3 py-1.5 rounded-full border border-red-300/30 text-red-300 hover:bg-red-300/10 transition-all text-sm card-hover ripple-effect">删除</button>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/5 hover:bg-white/10 transition-all card-hover">
+                        <div class="flex items-center space-x-4 mb-4">
+                            <img src="https://picsum.photos/id/66/100/100" alt="小刚" class="w-16 h-16 rounded-full object-cover border-2 border-primary/50">
+                            <div>
+                                <h3 class="text-xl font-bold">小刚</h3>
+                                <p class="text-white/60 text-sm">程序员</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4 mb-4">
+                            <div class="flex items-center space-x-2">
+                                <i class="fa fa-envelope text-white/50 pulse"></i>
+                                <span class="text-sm text-white/80">xiaogang@example.com</span>
+                            </div>
+                        </div>
+                        <div class="flex justify-between">
+                            <button class="member-edit-btn px-3 py-1.5 rounded-full border border-white/20 hover:bg-white/10 transition-all text-sm card-hover ripple-effect">编辑</button>
+                            <button class="member-delete-btn px-3 py-1.5 rounded-full border border-red-300/30 text-red-300 hover:bg-red-300/10 transition-all text-sm card-hover ripple-effect">删除</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 作品库内容 -->
+        <section id="gallery-content" class="content-section hidden scroll-animate fadeInScale">
+            <div class="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/5 mb-8 card-hover">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold">作品库</h2>
+                    <div class="flex space-x-4">
+                        <div class="relative">
+                            <input type="text" placeholder="搜索作品..." class="bg-white/10 border border-white/20 rounded-lg pl-10 pr-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-accent w-64 card-hover">
+                            <i class="fa fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-white/50"></i>
+                        </div>
+                        <button id="upload-work-btn" class="bg-accent hover:bg-accent/90 text-dark px-4 py-2 rounded-full font-medium transition-all bounce-hover flex items-center space-x-2 btn-enhanced magnetic ripple-effect">
+                            <i class="fa fa-upload wiggle"></i>
+                            <span>上传作品</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white/5 backdrop-blur-sm rounded-xl overflow-hidden border border-white/5 hover:bg-white/10 transition-all card-hover">
+                        <div class="relative">
+                            <img src="https://picsum.photos/id/1/800/600" alt="环保机器人" class="w-full h-48 object-cover">
+                            <div class="absolute top-2 right-2 flex space-x-2">
+                                <button class="work-edit-btn p-1.5 rounded-full bg-black/30 hover:bg-black/50 transition-all text-white card-hover ripple-effect">
+                                    <i class="fa fa-pencil pulse"></i>
+                                </button>
+                                <button class="work-delete-btn p-1.5 rounded-full bg-black/30 hover:bg-black/50 transition-all text-white card-hover ripple-effect">
+                                    <i class="fa fa-trash rotate"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="text-xl font-bold mb-2">环保机器人模型</h3>
+                            <p class="text-white/60 text-sm mb-3">这是我们团队制作的第一款环保主题机器人模型，使用了可回收材料制作。</p>
+                            <div class="flex justify-between items-center">
+                                <span class="bg-accent/20 text-accent text-xs px-2 py-1 rounded-full pulse">手工</span>
+                                <span class="text-white/60 text-sm">2025-08-10</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white/5 backdrop-blur-sm rounded-xl overflow-hidden border border-white/5 hover:bg-white/10 transition-all card-hover">
+                        <div class="relative">
+                            <img src="https://picsum.photos/id/20/800/600" alt="动漫角色设计" class="w-full h-48 object-cover">
+                            <div class="absolute top-2 right-2 flex space-x-2">
+                                <button class="work-edit-btn p-1.5 rounded-full bg-black/30 hover:bg-black/50 transition-all text-white card-hover ripple-effect">
+                                    <i class="fa fa-pencil pulse"></i>
+                                </button>
+                                <button class="work-delete-btn p-1.5 rounded-full bg-black/30 hover:bg-black/50 transition-all text-white card-hover ripple-effect">
+                                    <i class="fa fa-trash rotate"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="text-xl font-bold mb-2">动漫角色设计</h3>
+                            <p class="text-white/60 text-sm mb-3">原创动漫角色设计，包含角色设定图和表情系列。</p>
+                            <div class="flex justify-between items-center">
+                                <span class="bg-primary/20 text-primary text-xs px-2 py-1 rounded-full pulse">设计</span>
+                                <span class="text-white/60 text-sm">2025-08-08</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white/5 backdrop-blur-sm rounded-xl overflow-hidden border border-white/5 hover:bg-white/10 transition-all card-hover">
+                        <div class="relative">
+                            <img src="https://picsum.photos/id/28/800/600" alt="自然风景摄影" class="w-full h-48 object-cover">
+                            <div class="absolute top-2 right-2 flex space-x-2">
+                                <button class="work-edit-btn p-1.5 rounded-full bg-black/30 hover:bg-black/50 transition-all text-white card-hover ripple-effect">
+                                    <i class="fa fa-pencil pulse"></i>
+                                </button>
+                                <button class="work-delete-btn p-1.5 rounded-full bg-black/30 hover:bg-black/50 transition-all text-white card-hover ripple-effect">
+                                    <i class="fa fa-trash rotate"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="text-xl font-bold mb-2">自然风景摄影</h3>
+                            <p class="text-white/60 text-sm mb-3">户外拍摄的自然风景照片，记录美好瞬间。</p>
+                            <div class="flex justify-between items-center">
+                                <span class="bg-secondary/20 text-secondary text-xs px-2 py-1 rounded-full pulse">摄影</span>
+                                <span class="text-white/60 text-sm">2025-08-05</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 设置内容 -->
+        <section id="settings-content" class="content-section hidden scroll-animate fadeInScale">
+            <div class="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/5 mb-8 card-hover">
+                <h2 class="text-2xl font-bold mb-6">系统设置</h2>
+                
+                <div class="space-y-8">
+                    <!-- 个人资料设置 -->
+                    <div class="border-b border-white/10 pb-8">
+                        <h3 class="text-xl font-bold mb-4 flex items-center">
+                            <i class="fa fa-user-circle text-accent mr-3"></i>
+                            个人资料
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-white/80 mb-2 font-medium">显示名称</label>
+                                <input type="text" value="管理员" class="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-accent transition-all card-hover">
+                            </div>
+                            <div>
+                                <label class="block text-white/80 mb-2 font-medium">邮箱地址</label>
+                                <input type="email" value="admin@lanmeijiang.studio" class="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-accent transition-all card-hover">
+                            </div>
+                            <div>
+                                <label class="block text-white/80 mb-2 font-medium">职位</label>
+                                <input type="text" value="工作室管理员" class="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-accent transition-all card-hover">
+                            </div>
+                            <div>
+                                <label class="block text-white/80 mb-2 font-medium">联系电话</label>
+                                <input type="tel" value="13800000000" class="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-accent transition-all card-hover">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 通知设置 -->
+                    <div class="border-b border-white/10 pb-8">
+                        <h3 class="text-xl font-bold mb-4 flex items-center">
+                            <i class="fa fa-bell text-accent mr-3"></i>
+                            通知设置
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h4 class="font-medium">邮件通知</h4>
+                                    <p class="text-white/60 text-sm">接收重要更新和提醒的邮件</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" checked class="sr-only peer">
+                                    <div class="w-11 h-6 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent"></div>
+                                </label>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h4 class="font-medium">作品上传通知</h4>
+                                    <p class="text-white/60 text-sm">当有新作品上传时接收通知</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" checked class="sr-only peer">
+                                    <div class="w-11 h-6 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent"></div>
+                                </label>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h4 class="font-medium">成员加入通知</h4>
+                                    <p class="text-white/60 text-sm">当有新成员加入时接收通知</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" class="sr-only peer">
+                                    <div class="w-11 h-6 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent"></div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 安全设置 -->
+                    <div class="border-b border-white/10 pb-8">
+                        <h3 class="text-xl font-bold mb-4 flex items-center">
+                            <i class="fa fa-shield text-accent mr-3"></i>
+                            安全设置
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h4 class="font-medium">修改密码</h4>
+                                    <p class="text-white/60 text-sm">定期更换密码以保护账户安全</p>
+                                </div>
+                                <button class="px-4 py-2 rounded-full border border-white/20 hover:bg-white/10 transition-all card-hover ripple-effect">
+                                    修改
+                                </button>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h4 class="font-medium">双重验证</h4>
+                                    <p class="text-white/60 text-sm">启用双重验证增强账户安全</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" class="sr-only peer">
+                                    <div class="w-11 h-6 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-accent"></div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 保存按钮 -->
+                    <div class="flex justify-end space-x-4">
+                        <button class="px-6 py-2 rounded-full border border-white/20 hover:bg-white/10 transition-all card-hover ripple-effect">
+                            重置
+                        </button>
+                        <button class="bg-accent hover:bg-accent/90 text-dark px-6 py-2 rounded-full font-medium transition-all bounce-hover flex items-center space-x-2 btn-enhanced magnetic">
+                            <i class="fa fa-save pulse"></i>
+                            <span>保存设置</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 帮助中心内容 -->
+        <section id="help-content" class="content-section hidden scroll-animate fadeInScale">
+            <div class="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/5 mb-8 card-hover">
+                <h2 class="text-2xl font-bold mb-6">帮助中心</h2>
+                
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- 常见问题 -->
+                    <div>
+                        <h3 class="text-xl font-bold mb-4 flex items-center">
+                            <i class="fa fa-question-circle text-accent mr-3"></i>
+                            常见问题
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="bg-white/5 rounded-lg p-4 border border-white/5">
+                                <h4 class="font-bold mb-2">如何上传作品？</h4>
+                                <p class="text-white/70 text-sm">进入"作品管理"页面，点击"导入作品"按钮，选择要上传的文件即可。支持图片、音频、视频、文档等多种格式。</p>
+                            </div>
+                            <div class="bg-white/5 rounded-lg p-4 border border-white/5">
+                                <h4 class="font-bold mb-2">如何添加新成员？</h4>
+                                <p class="text-white/70 text-sm">在"成员管理"页面，点击"添加成员"按钮，填写成员信息后即可完成添加。</p>
+                            </div>
+                            <div class="bg-white/5 rounded-lg p-4 border border-white/5">
+                                <h4 class="font-bold mb-2">支持哪些文件格式？</h4>
+                                <p class="text-white/70 text-sm">目前支持 PNG、JPG、GIF、MP3、MP4、HTML、CSS、JS、PDF、ZIP 等常见格式。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 使用指南 -->
+                    <div>
+                        <h3 class="text-xl font-bold mb-4 flex items-center">
+                            <i class="fa fa-book text-accent mr-3"></i>
+                            使用指南
+                        </h3>
+                        <div class="space-y-4">
+                            <a href="#" class="block bg-white/5 rounded-lg p-4 border border-white/5 hover:bg-white/10 transition-all card-hover">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-3">
+                                        <i class="fa fa-file-text-o text-accent"></i>
+                                        <span class="font-medium">快速入门指南</span>
+                                    </div>
+                                    <i class="fa fa-chevron-right text-white/50"></i>
+                                </div>
+                            </a>
+                            <a href="#" class="block bg-white/5 rounded-lg p-4 border border-white/5 hover:bg-white/10 transition-all card-hover">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-3">
+                                        <i class="fa fa-video-camera text-accent"></i>
+                                        <span class="font-medium">视频教程</span>
+                                    </div>
+                                    <i class="fa fa-chevron-right text-white/50"></i>
+                                </div>
+                            </a>
+                            <a href="#" class="block bg-white/5 rounded-lg p-4 border border-white/5 hover:bg-white/10 transition-all card-hover">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-3">
+                                        <i class="fa fa-code text-accent"></i>
+                                        <span class="font-medium">API 文档</span>
+                                    </div>
+                                    <i class="fa fa-chevron-right text-white/50"></i>
+                                </div>
+                            </a>
+                            <a href="#" class="block bg-white/5 rounded-lg p-4 border border-white/5 hover:bg-white/10 transition-all card-hover">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-3">
+                                        <i class="fa fa-comments-o text-accent"></i>
+                                        <span class="font-medium">社区论坛</span>
+                                    </div>
+                                    <i class="fa fa-chevron-right text-white/50"></i>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 联系支持 -->
+                <div class="mt-8 p-6 bg-gradient-to-r from-accent/20 to-primary/20 rounded-xl border border-white/10">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-xl font-bold mb-2">需要更多帮助？</h3>
+                            <p class="text-white/70">我们的支持团队随时为您服务</p>
+                        </div>
+                        <a href="mailto:support@lanmeijiang.studio" class="bg-accent hover:bg-accent/90 text-dark px-6 py-3 rounded-full font-medium transition-all bounce-hover flex items-center space-x-2 btn-enhanced magnetic">
+                            <i class="fa fa-envelope"></i>
+                            <span>联系支持</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+                            <p class="text-white/60 text-sm mb-3">为校园动漫展准备的原创角色设计，结合了环保主题元素。</p>
+                            <div class="flex justify-between items-center">
+                                <span class="bg-accent/20 text-accent text-xs px-2 py-1 rounded-full pulse">绘画</span>
+                                <span class="text-white/60 text-sm">2025-08-15</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white/5 backdrop-blur-sm rounded-xl overflow-hidden border border-white/5 hover:bg-white/10 transition-all card-hover">
+                        <div class="relative">
+                            <img src="https://picsum.photos/id/96/800/600" alt="垃圾分类游戏界面" class="w-full h-48 object-cover">
+                            <div class="absolute top-2 right-2 flex space-x-2">
+                                <button class="work-edit-btn p-1.5 rounded-full bg-black/30 hover:bg-black/50 transition-all text-white card-hover ripple-effect">
+                                    <i class="fa fa-pencil pulse"></i>
+                                </button>
+                                <button class="work-delete-btn p-1.5 rounded-full bg-black/30 hover:bg-black/50 transition-all text-white card-hover ripple-effect">
+                                    <i class="fa fa-trash rotate"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="text-xl font-bold mb-2">垃圾分类游戏界面</h3>
+                            <p class="text-white/60 text-sm mb-3">垃圾分类小游戏的主界面设计，采用了卡通风格，适合儿童使用。</p>
+                            <div class="flex justify-between items-center">
+                                <span class="bg-accent/20 text-accent text-xs px-2 py-1 rounded-full pulse">编程</span>
+                                <span class="text-white/60 text-sm">2025-08-18</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+
+    <script>
+        // 设置日期显示
+        document.addEventListener('DOMContentLoaded', function() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1;
+            const day = now.getDate();
+            const weekday = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'][now.getDay()];
+            document.getElementById('current-date').textContent = `今天是 ${year}年${month}月${day}日 ${weekday}`;
+
+            // 导航切换逻辑
+            const navItems = document.querySelectorAll('.sidebar-item');
+            const contentSections = document.querySelectorAll('.content-section');
+
+            navItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // 移除所有导航项的活跃状态
+                    navItems.forEach(navItem => {
+                        navItem.classList.remove('sidebar-item-active');
+                        const link = navItem.querySelector('a');
+                        if (link) {
+                            link.classList.remove('text-accent');
+                            link.classList.add('text-white/70');
+                        }
+                        const icon = navItem.querySelector('i');
+                        if (icon) {
+                            icon.classList.remove('text-accent');
+                            icon.classList.add('text-white/70');
+                        }
+                    });
+
+                    // 添加当前导航项的活跃状态
+                    this.classList.add('sidebar-item-active');
+                    const link = this.querySelector('a');
+                    if (link) {
+                        link.classList.remove('text-white/70');
+                        link.classList.add('text-accent');
+                    }
+                    const icon = this.querySelector('i');
+                    if (icon) {
+                        icon.classList.remove('text-white/70');
+                        icon.classList.add('text-accent');
+                    }
+
+                    // 隐藏所有内容区域
+                    contentSections.forEach(section => {
+                        section.classList.add('hidden');
+                    });
+
+                    // 显示对应的内容区域
+                    const targetId = this.getAttribute('data-target');
+                    const targetSection = document.getElementById(targetId + '-content');
+                    if (targetSection) {
+                        targetSection.classList.remove('hidden');
+                    }
+                });
+            });
+
+            // 文件上传功能
+            const fileUploadBtn = document.getElementById('file-upload-btn');
+            const fileUploadInput = document.getElementById('file-upload-input');
+            const fileNameDisplay = document.getElementById('file-name-display');
+            const dropArea = document.getElementById('drop-area');
+
+            // 支持的文件类型和对应的图标
+            const supportedFileTypes = {
+                '.csv': { icon: 'fa-file-text-o' },
+                '.xlsx': { icon: 'fa-file-excel-o' },
+                '.xls': { icon: 'fa-file-excel-o' },
+                '.json': { icon: 'fa-file-code-o' },
+                '.png': { icon: 'fa-file-image-o' },
+                '.jpg': { icon: 'fa-file-image-o' },
+                '.jpeg': { icon: 'fa-file-image-o' },
+                '.gif': { icon: 'fa-file-image-o' },
+                '.mp3': { icon: 'fa-file-audio-o' },
+                '.m4a': { icon: 'fa-file-audio-o' },
+                '.mov': { icon: 'fa-file-video-o' },
+                '.mp4': { icon: 'fa-file-video-o' },
+                '.html': { icon: 'fa-file-code-o' },
+                '.css': { icon: 'fa-file-code-o' },
+                '.js': { icon: 'fa-file-code-o' },
+                '.pdf': { icon: 'fa-file-pdf-o' },
+                '.zip': { icon: 'fa-file-zip-o' }
+            };
+
+            // 验证文件类型
+            function isValidFileType(fileName) {
+                const extension = fileName.substring(fileName.lastIndexOf('.')).toLowerCase();
+                return Object.keys(supportedFileTypes).includes(extension);
+            }
+
+            // 获取文件对应的图标
+            function getFileIcon(fileName) {
+                const extension = fileName.substring(fileName.lastIndexOf('.')).toLowerCase();
+                return supportedFileTypes[extension]?.icon || 'fa-file-o';
+            }
+
+            if (fileUploadBtn && fileUploadInput) {
+                fileUploadBtn.addEventListener('click', function() {
+                    fileUploadInput.click();
+                });
+
+                fileUploadInput.addEventListener('change', function() {
+                    if (this.files && this.files[0]) {
+                        const file = this.files[0];
+                        
+                        // 验证文件类型
+                        if (!isValidFileType(file.name)) {
+                            alert('不支持的文件类型！请上传以下类型的文件：' + Object.keys(supportedFileTypes).join(', '));
+                            this.value = '';
+                            return;
+                        }
+                        
+                        // 显示文件名和对应的图标
+                        const fileIcon = getFileIcon(file.name);
+                        fileNameDisplay.innerHTML = `
+                            <div class="flex items-center justify-center space-x-2 py-2 px-4 bg-white/10 rounded-lg">
+                                <i class="fa ${fileIcon} text-accent"></i>
+                                <span>${file.name}</span>
+                                <span class="text-xs bg-accent/20 text-accent px-2 py-0.5 rounded">${(file.size / 1024).toFixed(2)} KB</span>
+                                <button class="ml-2 text-white/50 hover:text-white" id="remove-file-btn">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </div>
+                        `;
+
+                        // 添加移除文件按钮的事件
+                        document.getElementById('remove-file-btn').addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            fileNameDisplay.innerHTML = '';
+                            fileUploadInput.value = '';
+                        });
+                    }
+                });
+            }
+
+            // 拖放区域逻辑
+            if (dropArea && fileUploadInput && fileNameDisplay) {
+                // 阻止默认拖放行为
+                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                    dropArea.addEventListener(eventName, preventDefaults, false);
+                    document.body.addEventListener(eventName, preventDefaults, false);
+                });
+
+                function preventDefaults(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+
+                // 添加拖放高亮效果
+                ['dragenter', 'dragover'].forEach(eventName => {
+                    dropArea.addEventListener(eventName, highlight, false);
+                });
+
+                ['dragleave', 'drop'].forEach(eventName => {
+                    dropArea.addEventListener(eventName, unhighlight, false);
+                });
+
+                function highlight() {
+                    dropArea.classList.add('border-accent');
+                    dropArea.classList.add('bg-white/10');
+                }
+
+                function unhighlight() {
+                    dropArea.classList.remove('border-accent');
+                    dropArea.classList.remove('bg-white/10');
+                }
+
+                // 处理拖放文件
+                dropArea.addEventListener('drop', handleDrop, false);
+
+                function handleDrop(e) {
+                    const dt = e.dataTransfer;
+                    const files = dt.files;
+
+                    if (files && files[0]) {
+                        const file = files[0];
+                        
+                        // 验证文件类型
+                        if (!isValidFileType(file.name)) {
+                            alert('不支持的文件类型！请上传以下类型的文件：' + Object.keys(supportedFileTypes).join(', '));
+                            return;
+                        }
+                        
+                        fileUploadInput.files = files;
+                        
+                        // 显示文件名和对应的图标
+                        const fileIcon = getFileIcon(file.name);
+                        fileNameDisplay.innerHTML = `
+                            <div class="flex items-center justify-center space-x-2 py-2 px-4 bg-white/10 rounded-lg">
+                                <i class="fa ${fileIcon} text-accent"></i>
+                                <span>${file.name}</span>
+                                <span class="text-xs bg-accent/20 text-accent px-2 py-0.5 rounded">${(file.size / 1024).toFixed(2)} KB</span>
+                                <button class="ml-2 text-white/50 hover:text-white" id="remove-file-btn">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </div>
+                        `;
+
+                        // 添加移除文件按钮的事件
+                        document.getElementById('remove-file-btn').addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            fileNameDisplay.innerHTML = '';
+                            fileUploadInput.value = '';
+                        });
+                    }
+                }
+            }
+
+            // 导入面板显示/隐藏控制
+            const showImportPanelBtn = document.getElementById('show-import-panel-btn');
+            const importPanel = document.getElementById('import-panel');
+
+            if (showImportPanelBtn && importPanel) {
+                showImportPanelBtn.addEventListener('click', function() {
+                    if (importPanel.classList.contains('hidden')) {
+                        importPanel.classList.remove('hidden');
+                        this.innerHTML = '<i class="fa fa-times"></i><span>隐藏导入</span>';
+                    } else {
+                        importPanel.classList.add('hidden');
+                        this.innerHTML = '<i class="fa fa-upload"></i><span>导入作品</span>';
+                    }
+                });
+            }
+
+            // 导入按钮事件
+            const startImportBtn = document.getElementById('start-import-btn');
+
+            if (startImportBtn) {
+                startImportBtn.addEventListener('click', function() {
+                    // 检查是否选择了文件
+                    if (!fileUploadInput || !fileUploadInput.files || fileUploadInput.files.length === 0) {
+                        alert('请先选择要上传的文件');
+                        return;
+                    }
+
+                    const file = fileUploadInput.files[0];
+                    
+                    // 显示上传中状态
+                    const originalText = this.innerHTML;
+                    this.disabled = true;
+                    this.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> 上传中...';
+
+                    // 模拟上传过程（实际项目中这里会调用后端API）
+                    console.log('开始上传文件:', file.name, '大小:', file.size, '类型:', file.type);
+                    
+                    // 模拟上传延迟
+                    setTimeout(() => {
+                        // 上传完成后恢复按钮状态
+                        this.disabled = false;
+                        this.innerHTML = originalText;
+                        
+                        // 显示上传成功消息
+                        alert('作品上传成功！\n文件名: ' + file.name);
+                        
+                        // 清空文件选择
+                        fileNameDisplay.innerHTML = '';
+                        fileUploadInput.value = '';
+                    }, 1500);
+                });
+            }
+
+            // 导入数据页面的相关按钮事件
+            const cancelImportBtn = document.getElementById('cancel-import-btn');
+
+            if (cancelImportBtn) {
+                cancelImportBtn.addEventListener('click', function() {
+                    if (fileUploadInput) fileUploadInput.value = '';
+                    if (fileNameDisplay) fileNameDisplay.innerHTML = '';
+                });
+            }
+
+            // 成员管理相关按钮事件
+            const addMemberBtn = document.getElementById('add-member-btn');
+            const memberEditBtns = document.querySelectorAll('.member-edit-btn');
+            const memberDeleteBtns = document.querySelectorAll('.member-delete-btn');
+
+            if (addMemberBtn) {
+                addMemberBtn.addEventListener('click', function() {
+                    alert('打开添加成员表单\n(后端实现部分)');
+                });
+            }
+
+            memberEditBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const memberName = this.closest('div.bg-white\\/5').querySelector('h3').textContent;
+                    alert(`编辑成员：${memberName}\n(后端实现部分)`);
+                });
+            });
+
+            memberDeleteBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const memberName = this.closest('div.bg-white\\/5').querySelector('h3').textContent;
+                    if (confirm(`确定要删除成员：${memberName}吗？`)) {
+                        alert(`删除成员：${memberName}\n(后端实现部分)`);
+                    }
+                });
+            });
+
+            // 作品库相关按钮事件
+            const uploadWorkBtn = document.getElementById('upload-work-btn');
+            const workEditBtns = document.querySelectorAll('.work-edit-btn');
+            const workDeleteBtns = document.querySelectorAll('.work-delete-btn');
+
+            if (uploadWorkBtn) {
+                uploadWorkBtn.addEventListener('click', function() {
+                    alert('打开上传作品表单\n(后端实现部分)');
+                });
+            }
+
+            workEditBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const workName = this.closest('div.bg-white\\/5').querySelector('h3').textContent;
+                    alert(`编辑作品：${workName}\n(后端实现部分)`);
+                });
+            });
+
+            workDeleteBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const workName = this.closest('div.bg-white\\/5').querySelector('h3').textContent;
+                    if (confirm(`确定要删除作品：${workName}吗？`)) {
+                        alert(`删除作品：${workName}\n(后端实现部分)`);
+                    }
+                });
+            });
+
+            // 确保项目管理内容默认显示
+            document.getElementById('projects-content').classList.remove('hidden');
+
+            // 侧边栏导航功能
+            const sidebarItems = document.querySelectorAll('.sidebar-item');
+            const contentSections = document.querySelectorAll('.content-section');
+            const pageTitle = document.querySelector('main h1');
+            const pageSubtitle = document.querySelector('main p');
+            
+            // 页面标题映射
+            const pageTitles = {
+                'projects': { title: '作品管理', subtitle: '欢迎回来，今天是' },
+                'members': { title: '成员管理', subtitle: '管理工作室成员信息' },
+                'gallery': { title: '作品库', subtitle: '浏览和管理所有作品' },
+                'settings': { title: '系统设置', subtitle: '配置系统和个人偏好' },
+                'help': { title: '帮助中心', subtitle: '获取帮助和支持' }
+            };
+            
+            sidebarItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = this.getAttribute('data-target');
+                    
+                    // 更新侧边栏激活状态
+                    sidebarItems.forEach(si => {
+                        si.classList.remove('sidebar-item-active');
+                        const link = si.querySelector('a');
+                        const icon = si.querySelector('i');
+                        link.classList.remove('text-accent');
+                        link.classList.add('text-white/70');
+                        icon.classList.remove('text-accent', 'pulse');
+                        icon.classList.add('text-white/70');
+                    });
+                    
+                    this.classList.add('sidebar-item-active');
+                    const activeLink = this.querySelector('a');
+                    const activeIcon = this.querySelector('i');
+                    activeLink.classList.add('text-accent');
+                    activeLink.classList.remove('text-white/70');
+                    activeIcon.classList.add('text-accent', 'pulse');
+                    activeIcon.classList.remove('text-white/70');
+                    
+                    // 切换内容区域
+                    contentSections.forEach(section => {
+                        section.classList.add('hidden');
+                    });
+                    
+                    const targetSection = document.getElementById(target + '-content');
+                    if (targetSection) {
+                        targetSection.classList.remove('hidden');
+                        // 重新触发动画
+                        targetSection.classList.remove('fadeInScale');
+                        void targetSection.offsetWidth; // 触发重排
+                        targetSection.classList.add('fadeInScale');
+                    }
+                    
+                    // 更新页面标题
+                    if (pageTitles[target]) {
+                        pageTitle.textContent = pageTitles[target].title;
+                        pageSubtitle.innerHTML = pageTitles[target].subtitle + (target === 'projects' ? ' <span id="current-date" class="pulse"></span>' : '');
+                        // 重新设置日期
+                        if (target === 'projects') {
+                            const dateElement = document.getElementById('current-date');
+                            if (dateElement) {
+                                const today = new Date();
+                                const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+                                dateElement.textContent = today.toLocaleDateString('zh-CN', options);
+                            }
+                        }
+                    }
+                });
+            });
+            
+            // 设置和帮助中心的链接点击事件
+            document.querySelectorAll('a[href="#settings"], a[href="#help"]').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const target = this.getAttribute('href').substring(1);
+                    
+                    // 移除所有侧边栏激活状态
+                    sidebarItems.forEach(si => {
+                        si.classList.remove('sidebar-item-active');
+                        const linkEl = si.querySelector('a');
+                        const icon = si.querySelector('i');
+                        linkEl.classList.remove('text-accent');
+                        linkEl.classList.add('text-white/70');
+                        icon.classList.remove('text-accent', 'pulse');
+                        icon.classList.add('text-white/70');
+                    });
+                    
+                    // 切换内容区域
+                    contentSections.forEach(section => {
+                        section.classList.add('hidden');
+                    });
+                    
+                    const targetSection = document.getElementById(target + '-content');
+                    if (targetSection) {
+                        targetSection.classList.remove('hidden');
+                        targetSection.classList.remove('fadeInScale');
+                        void targetSection.offsetWidth;
+                        targetSection.classList.add('fadeInScale');
+                    }
+                    
+                    // 更新页面标题
+                    if (pageTitles[target]) {
+                        pageTitle.textContent = pageTitles[target].title;
+                        pageSubtitle.textContent = pageTitles[target].subtitle;
+                    }
+                });
+            });
+
+            // 滚动动画实现
+            const scrollElements = document.querySelectorAll('.scroll-animate');
+            
+            const elementInView = (el, percentageScroll = 100) => {
+                const elementTop = el.getBoundingClientRect().top;
+                return (
+                    elementTop <= (window.innerHeight || document.documentElement.clientHeight) * (percentageScroll / 100)
+                );
+            };
+            
+            const displayScrollElement = (element) => {
+                element.classList.add('in-view');
+            };
+            
+            const hideScrollElement = (element) => {
+                element.classList.remove('in-view');
+            };
+            
+            const handleScrollAnimation = () => {
+                scrollElements.forEach((el) => {
+                    if (elementInView(el, 70)) {
+                        displayScrollElement(el);
+                    } else {
+                        hideScrollElement(el);
+                    }
+                });
+            };
+            
+            window.addEventListener('scroll', () => {
+                handleScrollAnimation();
+            });
+            
+            // 初始加载时检查可见元素
+            handleScrollAnimation();
+            
+            // 页面加载动画
+            window.addEventListener('load', () => {
+                const animateElements = document.querySelectorAll('.animate-on-load');
+                animateElements.forEach((element, index) => {
+                    // 为每个元素添加递增的延迟，创建顺序动画效果
+                    const delay = 0.1 * index;
+                    element.style.opacity = '0';
+                    element.style.transform = 'translateY(30px)';
+                    element.style.transition = `opacity 0.6s ease ${delay}s, transform 0.6s ease ${delay}s`;
+                    
+                    // 使用setTimeout确保样式应用后再触发动画
+                    setTimeout(() => {
+                        element.style.opacity = '1';
+                        element.style.transform = 'translateY(0)';
+                    }, 50);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

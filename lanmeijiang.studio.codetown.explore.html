@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编程发现 - 蓝莓酱工作室</title>
+    <!-- 引入外部资源 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- 配置Tailwind自定义颜色和字体 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4A90E2',
+                        secondary: '#5C6BC0',
+                        accent: '#81D4FA',
+                        light: '#E3F2FD',
+                        dark: '#1A237E'
+                    },
+                    fontFamily: {
+                        fun: ['Comic Sans MS', 'Marker Felt', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <!-- 自定义工具类 -->
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .bounce-hover {
+                transition: transform 0.3s ease;
+            }
+            .bounce-hover:hover {
+                transform: translateY(-5px);
+            }
+        }
+    </style>
+    
+    <style>
+        /* 基础动画效果 */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .floating-delay-1 {
+            animation: float 3s ease-in-out 0.5s infinite;
+        }
+        
+        .floating-delay-2 {
+            animation: float 3s ease-in-out 1s infinite;
+        }
+        
+        /* 滚动动画 */
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .slideInUp {
+            animation: slideInUp 0.6s ease forwards;
+        }
+        
+        .slideInLeft {
+            animation: slideInLeft 0.6s ease forwards;
+        }
+        
+        .slideInRight {
+            animation: slideInRight 0.6s ease forwards;
+        }
+        
+        .fadeInScale {
+            animation: fadeInScale 0.6s ease forwards;
+        }
+        
+        /* 卡片悬停效果 */
+        .card-hover:hover {
+            transform: translateY(-10px);
+        }
+        
+        /* 导航栏滚动效果 */
+        .nav-scroll {
+            background-color: rgba(74, 144, 226, 0.95) !important;
+            backdrop-filter: blur(10px);
+            padding: 12px 0;
+        }
+        
+        /* 粒子动画 */
+        @keyframes particle-float {
+            0% { transform: translateY(0px) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+        
+        .particle {
+            position: absolute;
+            background: #81D4FA;
+            border-radius: 50%;
+            animation: particle-float 4s linear infinite;
+        }
+        
+        /* 星空背景 */
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            animation: particle-float 2s linear infinite;
+        }
+        
+        /* 新增动画效果 */
+        
+        /* 霓虹发光效果 */
+        @keyframes neon-glow {
+            0%, 100% { 
+                box-shadow: 0 0 5px #81D4FA, 0 0 10px #81D4FA, 0 0 15px #81D4FA;
+            }
+            50% { 
+                box-shadow: 0 0 10px #81D4FA, 0 0 20px #81D4FA, 0 0 30px #81D4FA;
+            }
+        }
+        
+        .neon-glow {
+            animation: neon-glow 2s ease-in-out infinite;
+        }
+        
+        /* 脉冲缩放效果 */
+        @keyframes pulse-scale {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .pulse-scale {
+            animation: pulse-scale 2s ease-in-out infinite;
+        }
+        
+        /* 旋转效果 */
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .spin-slow {
+            animation: spin-slow 8s linear infinite;
+        }
+        
+        /* 弹跳效果 */
+        @keyframes bounce-fun {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-15px); }
+            60% { transform: translateY(-7px); }
+        }
+        
+        .bounce-fun {
+            animation: bounce-fun 1.5s ease infinite;
+        }
+        
+        /* 摇摆效果 */
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(-3deg); }
+            50% { transform: rotate(3deg); }
+        }
+        
+        .wiggle {
+            animation: wiggle 1s ease-in-out infinite;
+        }
+        
+        /* 渐变文字效果 */
+        @keyframes gradient-text {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .gradient-text {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradient-text 3s ease infinite;
+        }
+        
+        /* 闪烁效果 */
+        @keyframes twinkle {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        .twinkle {
+            animation: twinkle 1.5s ease-in-out infinite;
+        }
+        
+        /* 滑动进入动画 - 增强版 */
+        @keyframes slideInUpBounce {
+            0% {
+                opacity: 0;
+                transform: translateY(80px) scale(0.9);
+            }
+            60% {
+                transform: translateY(-10px) scale(1.02);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        .slideInUpBounce {
+            animation: slideInUpBounce 0.8s ease forwards;
+        }
+        
+        /* 3D翻转效果 */
+        @keyframes flipInY {
+            0% {
+                opacity: 0;
+                transform: perspective(400px) rotateY(90deg);
+            }
+            100% {
+                opacity: 1;
+                transform: perspective(400px) rotateY(0);
+            }
+        }
+        
+        .flipInY {
+            animation: flipInY 0.8s ease forwards;
+        }
+        
+        /* 波纹扩散效果 */
+        @keyframes ripple {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+        
+        .ripple-effect {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ripple-effect::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 0;
+        }
+        
+        .ripple-effect:active::after {
+            animation: ripple 0.6s ease-out;
+        }
+        
+        /* 卡片光效 */
+        @keyframes card-shine {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+        
+        .card-shine {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card-shine::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            background-size: 200% 100%;
+            animation: card-shine 3s ease-in-out infinite;
+        }
+        
+        /* 打字机效果 */
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+        
+        @keyframes blink-caret {
+            from, to { border-color: transparent; }
+            50% { border-color: #81D4FA; }
+        }
+        
+        .typing-effect {
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 3px solid #81D4FA;
+            animation: typing 3s steps(40, end), blink-caret 0.75s step-end infinite;
+        }
+        
+        /* 悬浮阴影效果 */
+        .hover-lift {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .hover-lift:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        /* 图标旋转效果 */
+        .icon-spin-hover:hover i {
+            animation: spin-slow 1s linear infinite;
+        }
+        
+        /* 按钮脉冲效果 */
+        .btn-pulse {
+            animation: pulse-scale 2s ease-in-out infinite;
+        }
+        
+        .btn-pulse:hover {
+            animation: none;
+            transform: scale(1.1);
+        }
+        
+        /* 进度条动画 */
+        @keyframes progress-fill {
+            from { width: 0%; }
+            to { width: 100%; }
+        }
+        
+        .progress-animate {
+            animation: progress-fill 2s ease-out forwards;
+        }
+        
+        /* 浮动图标组 */
+        .floating-icons i {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .floating-icons i:nth-child(2) { animation-delay: 0.5s; }
+        .floating-icons i:nth-child(3) { animation-delay: 1s; }
+        .floating-icons i:nth-child(4) { animation-delay: 1.5s; }
+        
+        /* 鼠标跟随效果容器 */
+        .mouse-follow-container {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .mouse-follow-container::before {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(129, 212, 250, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            transform: translate(-50%, -50%);
+        }
+        
+        .mouse-follow-container:hover::before {
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body class="bg-gradient-to-br from-primary to-secondary text-white font-fun">
+    <!-- 导航栏 -->
+    <nav id="navbar" class="fixed w-full z-40 transition-all duration-300 py-4 bg-primary/80 backdrop-blur-sm">
+        <div class="container mx-auto px-4 md:px-8 flex justify-between items-center">
+            <a href="lanmeijiang.studio.out.class.html" class="flex items-center space-x-2">
+                <div class="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center">
+                    <i class="fa fa-paint-brush text-2xl text-accent"></i>
+                </div>
+                <span class="text-2xl font-bold tracking-tight">蓝莓酱工作室</span>
+            </a>
+            
+            <button class="hidden md:block bg-accent hover:bg-accent/90 text-dark px-4 py-2 rounded-full font-medium transition-all bounce-hover text-lg ml-6 login-button">
+                登录
+            </button>
+            
+            <!-- 桌面导航 -->
+            <div class="hidden md:flex items-center space-x-6 ml-auto">
+                <a href="lanmeijiang.studio.out.class.html" class="hover:text-accent transition-all text-lg">回到蓝莓酱工作室</a>
+            </div>
+            
+            <!-- 移动端菜单按钮 -->
+            <button id="menuBtn" class="md:hidden text-2xl">
+                <i class="fa fa-bars"></i>
+            </button>
+        </div>
+        
+        <!-- 移动端导航菜单 -->
+        <div id="mobileMenu" class="md:hidden hidden bg-dark/80 backdrop-blur-md absolute w-full">
+            <div class="container mx-auto px-4 py-6 flex flex-col space-y-4">
+                <a href="lanmeijiang.studio.out.class.html" class="py-2 hover:text-accent transition-all text-lg">回到蓝莓酱工作室</a>
+                <button class="bg-accent hover:bg-accent/90 text-dark px-4 py-2 rounded-full font-medium transition-all bounce-hover text-lg w-full login-button">
+                    登录
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 英雄区域 -->
+    <header class="min-h-screen flex items-center pt-20 relative overflow-hidden">
+        <!-- 粒子背景 -->
+        <div id="particles-bg" class="absolute inset-0 overflow-hidden">
+            <div class="stars">
+                <!-- 动态生成星星 -->
+            </div>
+        </div>
+        
+        <!-- 装饰元素 -->
+        <div class="absolute top-1/4 right-1/4 w-64 h-64 bg-accent/20 rounded-full filter blur-3xl floating"></div>
+        <div class="absolute bottom-1/4 left-1/4 w-96 h-96 bg-primary/30 rounded-full filter blur-3xl floating-delay-1"></div>
+        <div class="absolute top-1/2 left-1/3 w-40 h-40 bg-secondary/20 rounded-full filter blur-2xl floating-delay-2"></div>
+        
+        <div class="container mx-auto px-4 md:px-8 py-20 relative z-10">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="space-y-6 animate-on-load animate-delay-1">
+                    <h1 class="text-[clamp(2.5rem,6vw,4.5rem)] font-bold leading-tight text-shadow">
+                        编程<span class="text-accent gradient-text">发现</span>
+                    </h1>
+                    <p class="text-[clamp(1.2rem,3vw,1.5rem)] text-white/90 max-w-lg animate-on-load animate-delay-2 typing-effect">探索编程世界的无限可能，学习、分享、成长！</p>
+                    <div class="flex flex-wrap gap-4 animate-on-load animate-delay-3">
+                        <button id="learn-btn" class="bg-accent hover:bg-accent/90 text-dark px-6 py-3 rounded-full font-medium transition-all flex items-center gap-2 bounce-hover text-lg btn-enhanced magnetic ripple-effect btn-pulse neon-glow">
+                            开始学习
+                            <i class="fa fa-code wiggle"></i>
+                        </button>
+                        <button id="explore-btn" class="bg-transparent border-2 border-white/30 hover:border-white/50 text-white px-6 py-3 rounded-full font-medium transition-all flex items-center gap-2 bounce-hover text-lg hover:bg-white/10 ripple-effect">
+                            探索资源
+                            <i class="fa fa-search spin-slow"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="relative">
+                    <!-- 主要装饰图形 -->
+                    <div class="relative z-10 transform rotate-3d">
+                        <div class="w-80 h-80 mx-auto bg-gradient-to-br from-accent/40 to-primary/40 rounded-3xl backdrop-blur-sm border border-white/20 p-8 neon-glow floating">
+                            <div class="w-full h-full flex items-center justify-center">
+                                <div class="text-center">
+                                    <div class="w-32 h-32 mx-auto mb-6 bg-white/20 rounded-full flex items-center justify-center bounce-fun">
+                                        <i class="fa fa-code text-5xl text-accent"></i>
+                                    </div>
+                                    <h3 class="text-2xl font-bold text-shadow">代码世界</h3>
+                                    <p class="text-white/80 mt-2">用技术创造未来</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 浮动装饰元素 -->
+                    <div class="absolute -top-4 -right-4 w-16 h-16 bg-secondary/40 rounded-full blur-sm floating-delay-1"></div>
+                    <div class="absolute -bottom-4 -left-4 w-20 h-20 bg-accent/40 rounded-full blur-sm floating-delay-2"></div>
+                    <div class="absolute top-1/2 -left-8 w-12 h-12 bg-primary/40 rounded-full blur-sm"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 编程资源部分 -->
+    <section id="resources" class="py-20 relative overflow-hidden">
+        <!-- 背景装饰 -->
+        <div class="absolute inset-0 bg-gradient-to-br from-secondary/20 to-primary/20"></div>
+        
+        <div class="container mx-auto px-4 md:px-8 relative z-10">
+            <div class="text-center mb-16 scroll-animate">
+                <h2 class="text-[clamp(2rem,5vw,3.5rem)] font-bold mb-6">
+                    精选<span class="text-accent">资源</span>
+                </h2>
+                <p class="text-[clamp(1rem,2.5vw,1.3rem)] text-white/80 max-w-3xl mx-auto">发现优质的编程学习资源，从入门到精通，助力你的编程之旅。</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- 资源卡片1 -->
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/20 hover:bg-white/15 transition-all card-hover hover-lift card-shine scroll-animate slideInLeft mouse-follow-container">
+                    <div class="h-48 bg-gradient-to-br from-accent/40 to-primary/40 flex items-center justify-center icon-spin-hover">
+                        <i class="fa fa-book text-6xl text-white/60 floating"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-3">编程入门教程</h3>
+                        <p class="text-white/70 text-sm mb-4">从零开始学习编程，掌握HTML、CSS、JavaScript等基础技术。</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 bg-accent/20 text-accent rounded-full text-xs pulse-scale">入门</span>
+                            <span class="px-3 py-1 bg-primary/20 text-primary rounded-full text-xs">前端</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 资源卡片2 -->
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/20 hover:bg-white/15 transition-all card-hover hover-lift card-shine scroll-animate fadeInScale mouse-follow-container">
+                    <div class="h-48 bg-gradient-to-br from-secondary/40 to-primary/40 flex items-center justify-center icon-spin-hover">
+                        <i class="fa fa-laptop text-6xl text-white/60 floating-delay-1"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-3">在线编程工具</h3>
+                        <p class="text-white/70 text-sm mb-4">无需安装，直接在浏览器中编写和运行代码，方便快捷。</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 bg-secondary/20 text-secondary rounded-full text-xs">工具</span>
+                            <span class="px-3 py-1 bg-accent/20 text-accent rounded-full text-xs pulse-scale">在线</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 资源卡片3 -->
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/20 hover:bg-white/15 transition-all card-hover hover-lift card-shine scroll-animate slideInRight mouse-follow-container">
+                    <div class="h-48 bg-gradient-to-br from-primary/40 to-secondary/40 flex items-center justify-center icon-spin-hover">
+                        <i class="fa fa-users text-6xl text-white/60 floating-delay-2"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-3">编程社区</h3>
+                        <p class="text-white/70 text-sm mb-4">加入活跃的编程社区，提问、分享、交流，共同成长。</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 bg-primary/20 text-primary rounded-full text-xs pulse-scale">社区</span>
+                            <span class="px-3 py-1 bg-secondary/20 text-secondary rounded-full text-xs">交流</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 学习路径部分 -->
+    <section id="learning-paths" class="py-20 relative overflow-hidden">
+        <!-- 背景装饰 -->
+        <div class="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20"></div>
+        
+        <div class="container mx-auto px-4 md:px-8 relative z-10">
+            <div class="text-center mb-16 scroll-animate">
+                <h2 class="text-[clamp(2rem,5vw,3.5rem)] font-bold mb-6">
+                    学习<span class="text-accent">路径</span>
+                </h2>
+                <p class="text-[clamp(1rem,2.5vw,1.3rem)] text-white/80 max-w-3xl mx-auto">精心设计的学习路径，帮助你系统地掌握编程技能。</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-12">
+                <!-- 前端开发路径 -->
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:bg-white/15 transition-all card-hover hover-lift card-shine scroll-animate slideInLeft mouse-follow-container">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-16 h-16 rounded-full bg-accent/30 flex items-center justify-center icon-spin-hover floating">
+                            <i class="fa fa-desktop text-3xl text-accent"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold">前端开发</h3>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3 hover-lift">
+                            <div class="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
+                                <i class="fa fa-check text-accent"></i>
+                            </div>
+                            <span>HTML & CSS 基础</span>
+                        </div>
+                        <div class="flex items-center gap-3 hover-lift">
+                            <div class="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
+                                <i class="fa fa-check text-accent"></i>
+                            </div>
+                            <span>JavaScript 核心</span>
+                        </div>
+                        <div class="flex items-center gap-3 hover-lift">
+                            <div class="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
+                                <i class="fa fa-check text-accent"></i>
+                            </div>
+                            <span>响应式设计</span>
+                        </div>
+                        <div class="flex items-center gap-3 hover-lift">
+                            <div class="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
+                                <i class="fa fa-check text-accent"></i>
+                            </div>
+                            <span>前端框架 (React/Vue)</span>
+                        </div>
+                        <div class="flex items-center gap-3 hover-lift">
+                            <div class="w-8 h-8 rounded-full bg-accent/20 flex items-center justify-center flex-shrink-0">
+                                <i class="fa fa-check text-accent"></i>
+                            </div>
+                            <span>前端项目实战</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 后端开发路径 -->
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:bg-white/15 transition-all card-hover hover-lift card-shine scroll-animate slideInRight mouse-follow-container">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-16 h-16 rounded-full bg-primary/30 flex items-center justify-center icon-spin-hover floating-delay-1">
+                            <i class="fa fa-server text-3xl text-primary"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold">后端开发</h3>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3 hover-lift">
+                            <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
+                                <i class="fa fa-check text-primary"></i>
+                            </div>
+                            <span>服务器基础</span>
+                        </div>
+                        <div class="flex items-center gap-3 hover-lift">
+                            <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
+                                <i class="fa fa-check text-primary"></i>
+                            </div>
+                            <span>数据库 (MySQL/MongoDB)</span>
+                        </div>
+                        <div class="flex items-center gap-3 hover-lift">
+                            <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
+                                <i class="fa fa-check text-primary"></i>
+                            </div>
+                            <span>后端语言 (Python/Node.js)</span>
+                        </div>
+                        <div class="flex items-center gap-3 hover-lift">
+                            <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
+                                <i class="fa fa-check text-primary"></i>
+                            </div>
+                            <span>API 开发</span>
+                        </div>
+                        <div class="flex items-center gap-3 hover-lift">
+                            <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
+                                <i class="fa fa-check text-primary"></i>
+                            </div>
+                            <span>后端项目实战</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 在线编程工具部分 -->
+    <section id="tools" class="py-20 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-primary/20 to-secondary/20"></div>
+        
+        <div class="container mx-auto px-4 md:px-8 relative z-10">
+            <div class="text-center mb-16 scroll-animate">
+                <h2 class="text-[clamp(2rem,5vw,3.5rem)] font-bold mb-6">
+                    在线编程<span class="text-accent">工具</span>
+                </h2>
+                <p class="text-[clamp(1rem,2.5vw,1.3rem)] text-white/80 max-w-3xl mx-auto">无需安装任何软件，直接在浏览器中编写和运行代码。</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <a href="https://scratch.mit.edu" target="_blank" class="block bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 text-center hover:bg-white/15 transition-all card-hover hover-lift card-shine scroll-animate slideInLeft mouse-follow-container">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-accent/40 to-primary/40 rounded-full flex items-center justify-center icon-spin-hover floating">
+                        <i class="fa fa-puzzle-piece text-2xl text-accent"></i>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2">Scratch</h3>
+                    <p class="text-white/70 text-sm">图形化编程，适合初学者制作游戏和动画。</p>
+                </a>
+                
+                <a href="https://codepen.io" target="_blank" class="block bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 text-center hover:bg-white/15 transition-all card-hover hover-lift card-shine scroll-animate slideInUp mouse-follow-container">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-secondary/40 to-primary/40 rounded-full flex items-center justify-center icon-spin-hover floating-delay-1">
+                        <i class="fa fa-codepen text-2xl text-accent"></i>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2">CodePen</h3>
+                    <p class="text-white/70 text-sm">在线前端代码编辑器，支持HTML/CSS/JS。</p>
+                </a>
+                
+                <a href="https://replit.com" target="_blank" class="block bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 text-center hover:bg-white/15 transition-all card-hover hover-lift card-shine scroll-animate slideInUp mouse-follow-container">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-primary/40 to-secondary/40 rounded-full flex items-center justify-center icon-spin-hover floating-delay-2">
+                        <i class="fa fa-terminal text-2xl text-accent"></i>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2">Replit</h3>
+                    <p class="text-white/70 text-sm">支持多种编程语言的在线IDE。</p>
+                </a>
+                
+                <a href="https://github.com" target="_blank" class="block bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 text-center hover:bg-white/15 transition-all card-hover hover-lift card-shine scroll-animate slideInRight mouse-follow-container">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-accent/40 to-secondary/40 rounded-full flex items-center justify-center icon-spin-hover floating">
+                        <i class="fa fa-github text-2xl text-accent"></i>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2">GitHub</h3>
+                    <p class="text-white/70 text-sm">代码托管平台，学习和分享开源项目。</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 精选教程部分 -->
+    <section id="tutorials" class="py-20 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-secondary/20 to-primary/20"></div>
+        
+        <div class="container mx-auto px-4 md:px-8 relative z-10">
+            <div class="text-center mb-16 scroll-animate">
+                <h2 class="text-[clamp(2rem,5vw,3.5rem)] font-bold mb-6">
+                    精选<span class="text-accent">教程</span>
+                </h2>
+                <p class="text-[clamp(1rem,2.5vw,1.3rem)] text-white/80 max-w-3xl mx-auto">精心整理的编程教程，从入门到进阶，帮助你系统学习。</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/20 hover:bg-white/15 transition-all card-hover hover-lift card-shine scroll-animate slideInLeft mouse-follow-container">
+                    <div class="h-40 bg-gradient-to-br from-accent/40 to-primary/40 flex items-center justify-center icon-spin-hover">
+                        <i class="fa fa-html5 text-5xl text-white/60 floating"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="px-2 py-1 bg-accent/20 text-accent rounded text-xs pulse-scale">入门</span>
+                            <span class="text-white/50 text-xs">12节课</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">HTML5 基础教程</h3>
+                        <p class="text-white/70 text-sm mb-4">学习网页结构的基础，掌握标签、属性和语义化编程。</p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <i class="fa fa-user-circle text-white/50"></i>
+                                <span class="text-sm text-white/70">蓝莓酱</span>
+                            </div>
+                            <button class="text-accent hover:text-accent/80 text-sm font-medium ripple-effect">开始学习 →</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/20 hover:bg-white/15 transition-all card-hover hover-lift card-shine scroll-animate fadeInScale mouse-follow-container">
+                    <div class="h-40 bg-gradient-to-br from-secondary/40 to-primary/40 flex items-center justify-center icon-spin-hover">
+                        <i class="fa fa-css3 text-5xl text-white/60 floating-delay-1"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="px-2 py-1 bg-primary/20 text-primary rounded text-xs pulse-scale">进阶</span>
+                            <span class="text-white/50 text-xs">18节课</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">CSS3 样式设计</h3>
+                        <p class="text-white/70 text-sm mb-4">掌握网页样式设计，学习布局、动画和响应式设计。</p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <i class="fa fa-user-circle text-white/50"></i>
+                                <span class="text-sm text-white/70">抹茶酱</span>
+                            </div>
+                            <button class="text-accent hover:text-accent/80 text-sm font-medium ripple-effect">开始学习 →</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/20 hover:bg-white/15 transition-all card-hover hover-lift card-shine scroll-animate slideInRight mouse-follow-container">
+                    <div class="h-40 bg-gradient-to-br from-primary/40 to-secondary/40 flex items-center justify-center icon-spin-hover">
+                        <i class="fa fa-jsfiddle text-5xl text-white/60 floating-delay-2"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 mb-3">
+                            <span class="px-2 py-1 bg-secondary/20 text-secondary rounded text-xs pulse-scale">中级</span>
+                            <span class="text-white/50 text-xs">24节课</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">JavaScript 编程</h3>
+                        <p class="text-white/70 text-sm mb-4">学习网页交互编程，掌握变量、函数、事件和DOM操作。</p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <i class="fa fa-user-circle text-white/50"></i>
+                                <span class="text-sm text-white/70">草莓酱</span>
+                            </div>
+                            <button class="text-accent hover:text-accent/80 text-sm font-medium ripple-effect">开始学习 →</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 社区活动部分 -->
+    <section id="community" class="py-20 relative overflow-hidden">
+        <!-- 背景装饰 -->
+        <div class="absolute inset-0 bg-gradient-to-br from-secondary/20 to-primary/20"></div>
+        
+        <div class="container mx-auto px-4 md:px-8 relative z-10">
+            <div class="text-center mb-16 scroll-animate">
+                <h2 class="text-[clamp(2rem,5vw,3.5rem)] font-bold mb-6">
+                    社区<span class="text-accent">活动</span>
+                </h2>
+                <p class="text-[clamp(1rem,2.5vw,1.3rem)] text-white/80 max-w-3xl mx-auto">参与社区活动，结识志同道合的朋友，共同学习和成长。</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- 活动卡片1 -->
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/20 hover:bg-white/15 transition-all card-hover scroll-animate slideInLeft">
+                    <div class="h-48 bg-gradient-to-br from-accent/40 to-primary/40 flex items-center justify-center">
+                        <i class="fa fa-calendar text-6xl text-white/60"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 mb-3">
+                            <i class="fa fa-calendar-check-o text-accent"></i>
+                            <span class="text-sm text-white/70">每周六 14:00</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">编程研讨会</h3>
+                        <p class="text-white/70 text-sm mb-4">定期举办的编程技术分享会，探讨最新的技术趋势和最佳实践。</p>
+                        <button class="w-full bg-accent/20 hover:bg-accent/30 text-accent px-4 py-2 rounded-full font-medium transition-all">
+                            报名参加
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 活动卡片2 -->
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/20 hover:bg-white/15 transition-all card-hover scroll-animate fadeInScale">
+                    <div class="h-48 bg-gradient-to-br from-secondary/40 to-primary/40 flex items-center justify-center">
+                        <i class="fa fa-trophy text-6xl text-white/60"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 mb-3">
+                            <i class="fa fa-calendar-check-o text-accent"></i>
+                            <span class="text-sm text-white/70">每月一次</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">编程竞赛</h3>
+                        <p class="text-white/70 text-sm mb-4">有趣的编程竞赛，锻炼你的编程技能，赢取精美奖品。</p>
+                        <button class="w-full bg-accent/20 hover:bg-accent/30 text-accent px-4 py-2 rounded-full font-medium transition-all">
+                            了解详情
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 活动卡片3 -->
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/20 hover:bg-white/15 transition-all card-hover scroll-animate slideInRight">
+                    <div class="h-48 bg-gradient-to-br from-primary/40 to-secondary/40 flex items-center justify-center">
+                        <i class="fa fa-comments-o text-6xl text-white/60"></i>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center gap-2 mb-3">
+                            <i class="fa fa-calendar-check-o text-accent"></i>
+                            <span class="text-sm text-white/70">每日开放</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">问题解答</h3>
+                        <p class="text-white/70 text-sm mb-4">遇到编程问题？在这里提问，社区成员会热心帮助你解决。</p>
+                        <button class="w-full bg-accent/20 hover:bg-accent/30 text-accent px-4 py-2 rounded-full font-medium transition-all">
+                            提问问题
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="py-12 bg-dark/30 backdrop-blur-sm">
+        <div class="container mx-auto px-4 md:px-8">
+            <div class="text-center">
+                <div class="flex items-center justify-center space-x-2 mb-4">
+                    <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
+                        <i class="fa fa-paint-brush text-lg text-accent"></i>
+                    </div>
+                    <span class="text-xl font-bold">蓝莓酱工作室</span>
+                </div>
+                <p class="text-white/60 text-sm mb-4">用创意点亮生活，用艺术温暖人心</p>
+                <p class="text-white/40 text-xs">© 2024 蓝莓酱工作室. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript功能 -->
+    <script>
+        // 导航栏滚动效果
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('nav-scroll');
+            } else {
+                navbar.classList.remove('nav-scroll');
+            }
+        });
+        
+        // 移动端菜单
+        const menuBtn = document.getElementById('menuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        
+        menuBtn.addEventListener('click', function() {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // 粒子效果
+        const particlesBg = document.getElementById('particles-bg');
+        if (particlesBg) {
+            const createParticle = () => {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // 随机大小和位置
+                const size = Math.random() * 5 + 2;
+                const left = Math.random() * 100;
+                const top = Math.random() * 100;
+                const delay = Math.random() * 4;
+                const duration = Math.random() * 3 + 3;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${left}%`;
+                particle.style.top = `${top}%`;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.animationDuration = `${duration}s`;
+                
+                particlesBg.appendChild(particle);
+                
+                // 一段时间后移除粒子
+                setTimeout(() => {
+                    if (particle.parentNode) {
+                        particle.parentNode.removeChild(particle);
+                    }
+                }, (delay + duration) * 1000);
+            };
+            
+            // 初始创建一些粒子
+            for (let i = 0; i < 20; i++) {
+                createParticle();
+            }
+            
+            // 定时创建粒子
+            setInterval(createParticle, 500);
+        }
+        
+        // 星空背景
+        const starsContainer = document.querySelector('.stars');
+        if (starsContainer) {
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.animationDelay = `${Math.random() * 2}s`;
+                star.style.animationDuration = `${Math.random() * 3 + 2}s`;
+                starsContainer.appendChild(star);
+            }
+        }
+    </script>
+</body>
+</html>

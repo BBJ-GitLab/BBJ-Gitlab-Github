@@ -1,0 +1,1537 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>蓝莓酱工作室</title>
+    <!-- 引入外部资源 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- 配置Tailwind自定义颜色和字体 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4A90E2',
+                        secondary: '#5C6BC0',
+                        accent: '#81D4FA',
+                        light: '#E3F2FD',
+                        dark: '#1A237E'
+                    },
+                    fontFamily: {
+                        fun: ['Comic Sans MS', 'Marker Felt', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <!-- 自定义工具类 -->
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .bounce-hover {
+                transition: transform 0.3s ease;
+            }
+            .bounce-hover:hover {
+                transform: translateY(-5px);
+            }
+        }
+    </style>
+    
+    <style>
+        /* 基础动画效果 */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .floating-delay-1 {
+            animation: float 3s ease-in-out 0.5s infinite;
+        }
+        
+        .floating-delay-2 {
+            animation: float 3s ease-in-out 1s infinite;
+        }
+        
+        /* 滚动动画 */
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes wiggle {
+            0%, 7% { transform: rotateZ(0); }
+            15% { transform: rotateZ(-15deg); }
+            20% { transform: rotateZ(10deg); }
+            25% { transform: rotateZ(-10deg); }
+            30% { transform: rotateZ(6deg); }
+            35% { transform: rotateZ(-4deg); }
+            40%, 100% { transform: rotateZ(0); }
+        }
+        
+        /* 3D翻转效果 */
+        @keyframes flipInX {
+            from {
+                transform: perspective(400px) rotateX(90deg);
+                opacity: 0;
+            }
+            to {
+                transform: perspective(400px) rotateX(0deg);
+                opacity: 1;
+            }
+        }
+        
+        /* 视差滚动效果 */
+        @keyframes parallax {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(-50px); }
+        }
+        
+        /* 波纹效果 */
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+        
+        .ripple-effect {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(0);
+            animation: ripple 600ms linear;
+        }
+        
+        /* 粒子动画 */
+        @keyframes particle-float {
+            0% { transform: translateY(0px) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+        
+        .particle {
+            position: absolute;
+            background: #81D4FA;
+            border-radius: 50%;
+            animation: particle-float 4s linear infinite;
+        }
+        
+        /* 页面加载动画 */
+        .animate-on-load {
+            opacity: 0;
+            animation: slideInUp 0.8s ease forwards;
+        }
+        
+        .animate-delay-1 { animation-delay: 0.2s; }
+        .animate-delay-2 { animation-delay: 0.4s; }
+        .animate-delay-3 { animation-delay: 0.6s; }
+        .animate-delay-4 { animation-delay: 0.8s; }
+        .animate-delay-5 { animation-delay: 1s; }
+        
+        /* 滚动触发动画 */
+        .scroll-animate {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .scroll-animate.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* 滚动触发的滑动动画 */
+        .scroll-animate.slideInLeft {
+            opacity: 0;
+            transform: translateX(-50px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .scroll-animate.slideInLeft.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .scroll-animate.slideInRight {
+            opacity: 0;
+            transform: translateX(50px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .scroll-animate.slideInRight.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .scroll-animate.slideInUp {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .scroll-animate.slideInUp.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .scroll-animate.fadeInScale {
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .scroll-animate.fadeInScale.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        .scroll-animate.flipInX {
+            opacity: 0;
+            transform: perspective(400px) rotateX(90deg);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .scroll-animate.flipInX.active {
+            opacity: 1;
+            transform: perspective(400px) rotateX(0deg);
+        }
+        
+        /* 滚动视差效果 */
+        .scroll-parallax {
+            transform: translateY(0);
+            transition: transform 0.1s linear;
+        }
+        
+        /* 波纹效果 */
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+        
+        .ripple-effect {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(0);
+            animation: ripple 600ms linear;
+        }
+        
+        /* 粒子动画 */
+        @keyframes particle-float {
+            0% { transform: translateY(0px) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+        
+        .particle {
+            position: absolute;
+            background: #81D4FA;
+            border-radius: 50%;
+            animation: particle-float 4s linear infinite;
+        }
+        
+        /* 页面加载动画 */
+        .animate-on-load {
+            opacity: 0;
+            animation: slideInUp 0.8s ease forwards;
+        }
+        
+        .animate-delay-1 { animation-delay: 0.2s; }
+        .animate-delay-2 { animation-delay: 0.4s; }
+        .animate-delay-3 { animation-delay: 0.6s; }
+        .animate-delay-4 { animation-delay: 0.8s; }
+        .animate-delay-5 { animation-delay: 1s; }
+        
+        /* 增强的hover效果 */
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        
+        .btn-enhanced {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-enhanced::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn-enhanced:hover::before {
+            left: 100%;
+        }
+        
+        .btn-enhanced:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        /* 磁铁效果 */
+        .magnetic:hover {
+            transform: scale(1.1);
+            filter: brightness(1.2);
+        }
+        
+        /* 霓虹灯效果 */
+        .neon-glow {
+            box-shadow: 
+                0 0 5px #81D4FA,
+                0 0 10px #81D4FA,
+                0 0 15px #81D4FA,
+                0 0 20px #81D4FA;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        /* 星空背景 */
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s infinite;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+        
+        /* 背景视差效果 */
+        .parallax-bg {
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        
+        /* 弹性动画 */
+        @keyframes elastic {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .elastic:hover {
+            animation: elastic 0.6s ease;
+        }
+        
+        /* 滑块效果 */
+        @keyframes slideOut {
+            to {
+                transform: translateX(100%);
+            }
+        }
+        
+        /* 3D旋转效果 */
+        .rotate-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+        }
+        
+        .rotate-3d:hover {
+            transform: rotateY(180deg);
+        }
+        
+        /* 平滑滚动 */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* 背景渐变动画 */
+        .animated-gradient {
+            background: linear-gradient(-45deg, #4A90E2, #5C6BC0, #81D4FA, #E3F2FD);
+            background-size: 400% 400%;
+            animation: gradient-shift 15s ease infinite;
+        }
+        
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* 新增动画效果 */
+        
+        /* 彩虹边框动画 */
+        @keyframes rainbow-border {
+            0% { border-color: #ff0000; }
+            16% { border-color: #ff8000; }
+            33% { border-color: #ffff00; }
+            50% { border-color: #00ff00; }
+            66% { border-color: #0080ff; }
+            83% { border-color: #8000ff; }
+            100% { border-color: #ff0000; }
+        }
+        
+        .rainbow-border {
+            border: 3px solid;
+            animation: rainbow-border 3s linear infinite;
+        }
+        
+
+        
+        /* 跳跃动画 */
+        @keyframes bounce-fun {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        
+        .bounce-fun:hover {
+            animation: bounce-fun 0.6s ease;
+        }
+        
+        /* 颜色渐变文字 */
+        @keyframes color-shift {
+            0% { color: #ff6b6b; }
+            25% { color: #4ecdc4; }
+            50% { color: #45b7d1; }
+            75% { color: #96ceb4; }
+            100% { color: #ffeaa7; }
+        }
+        
+        .color-shift {
+            animation: color-shift 3s ease-in-out infinite;
+        }
+        
+        /* 旋转跳跃 */
+        @keyframes spin-bounce {
+            0% { transform: rotate(0deg) translateY(0); }
+            25% { transform: rotate(90deg) translateY(-5px); }
+            50% { transform: rotate(180deg) translateY(0); }
+            75% { transform: rotate(270deg) translateY(-5px); }
+            100% { transform: rotate(360deg) translateY(0); }
+        }
+        
+        .spin-bounce:hover {
+            animation: spin-bounce 1s ease-in-out;
+        }
+        
+        /* 波浪效果 */
+        @keyframes wave {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(5deg); }
+            75% { transform: rotate(-5deg); }
+        }
+        
+        .wave:hover {
+            animation: wave 0.5s ease-in-out;
+        }
+        
+        /* 缩放脉冲 */
+        @keyframes scale-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .scale-pulse:hover {
+            animation: scale-pulse 0.8s ease-in-out infinite;
+        }
+        
+        /* 摇摆文字 */
+        @keyframes text-swing {
+            0%, 100% { transform: rotate(-3deg); }
+            50% { transform: rotate(3deg); }
+        }
+        
+        .text-swing {
+            display: inline-block;
+            animation: text-swing 2s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body class="bg-gradient-to-br from-primary to-secondary text-white font-fun">
+    <!-- 导航栏 -->
+    <nav id="navbar" class="fixed w-full z-40 transition-all duration-300 py-4 bg-primary/80 backdrop-blur-sm">
+        <div class="container mx-auto px-4 md:px-8 flex justify-between items-center">
+            <a href="#" class="flex items-center space-x-2">
+                <div class="w-10 h-10 rounded-lg bg-white/20 flex items-center justify-center">
+                    <i class="fa fa-paint-brush text-2xl text-accent"></i>
+                </div>
+                <span class="text-2xl font-bold tracking-tight">蓝莓酱工作室</span>
+            </a>
+            
+            <button class="hidden md:block bg-accent hover:bg-accent/90 text-dark px-4 py-2 rounded-full font-medium transition-all bounce-hover text-lg ml-6 login-button">
+                登录
+            </button>
+            
+            <!-- 桌面导航 -->
+            <div class="hidden md:flex items-center space-x-6 ml-auto">
+                <a href="#about" class="hover:text-accent transition-all text-lg">关于我们</a>
+                <a href="#services" class="hover:text-accent transition-all text-lg">我们会做什么</a>
+                <a href="#projects" class="hover:text-accent transition-all text-lg">蓝莓酱综合社区</a>
+                <a href="#team" class="hover:text-accent transition-all text-lg">工作室成员</a>
+                <a href="#contact" class="hover:text-accent transition-all text-lg">联系我们</a>
+            </div>
+            
+            <!-- 移动端菜单按钮 -->
+            <button id="menuBtn" class="md:hidden text-2xl">
+                <i class="fa fa-bars"></i>
+            </button>
+        </div>
+        
+        <!-- 移动端导航菜单 -->
+        <div id="mobileMenu" class="md:hidden hidden bg-dark/80 backdrop-blur-md absolute w-full">
+            <div class="container mx-auto px-4 py-6 flex flex-col space-y-4">
+                <a href="#about" class="py-2 hover:text-accent transition-all text-lg">关于我们</a>
+                <a href="#services" class="py-2 hover:text-accent transition-all text-lg">我们会做什么</a>
+                <a href="#projects" class="py-2 hover:text-accent transition-all text-lg">蓝莓酱综合社区</a>
+                <a href="#team" class="py-2 hover:text-accent transition-all text-lg">工作室成员</a>
+                <a href="#contact" class="py-2 hover:text-accent transition-all text-lg">联系我们</a>
+                <button class="bg-accent hover:bg-accent/90 text-dark px-4 py-2 rounded-full font-medium transition-all bounce-hover text-lg w-full login-button">
+                    登录
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 英雄区域 -->
+    <header class="min-h-screen flex items-center pt-20 relative overflow-hidden animated-gradient">
+        <!-- 粒子背景 -->
+        <div id="particles-bg" class="absolute inset-0 overflow-hidden">
+            <div class="stars">
+                <!-- 动态生成星星 -->
+            </div>
+        </div>
+        
+        <!-- 装饰元素 -->
+        <div class="absolute top-1/4 right-1/4 w-64 h-64 bg-accent/20 rounded-full filter blur-3xl floating"></div>
+        <div class="absolute bottom-1/4 left-1/4 w-96 h-96 bg-primary/30 rounded-full filter blur-3xl floating-delay-1"></div>
+        <div class="absolute top-1/2 left-1/3 w-40 h-40 bg-secondary/20 rounded-full filter blur-2xl floating-delay-2"></div>
+        
+        <div class="container mx-auto px-4 md:px-8 py-20 relative z-10">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="space-y-6 animate-on-load animate-delay-1">
+                    <h1 class="text-[clamp(2.5rem,6vw,4.5rem)] font-bold leading-tight text-shadow">
+                        我们是<br>
+                        <span class="text-accent">蓝莓酱工作室</span>
+                    </h1>
+                    <p class="text-[clamp(1.2rem,3vw,1.5rem)] text-white/90 max-w-lg animate-on-load animate-delay-2">我们喜欢画画、做手工，用想象力打造有趣的作品！</p>
+                    <div class="flex flex-wrap gap-4 animate-on-load animate-delay-3">
+                        <button id="view-works-btn" class="bg-accent hover:bg-accent/90 text-dark px-6 py-3 rounded-full font-medium transition-all flex items-center gap-2 bounce-hover text-lg btn-enhanced magnetic ripple-effect">
+                            看看蓝莓酱综合社区
+                            <i class="fa fa-arrow-right"></i>
+                        </button>
+                        <button id="about-btn" class="bg-transparent border-2 border-white/30 hover:border-white/50 text-white px-6 py-3 rounded-full font-medium transition-all flex items-center gap-2 bounce-hover text-lg hover:bg-white/10">
+                            了解更多
+                            <i class="fa fa-info-circle"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="relative">
+                    <!-- 主要装饰图形 -->
+                    <div class="relative z-10 transform">
+                        <div class="w-80 h-80 mx-auto bg-gradient-to-br from-accent/40 to-primary/40 rounded-3xl backdrop-blur-sm border border-white/20 p-8 neon-glow floating">
+                            <div class="w-full h-full flex items-center justify-center">
+                                <div class="text-center">
+                                    <div class="w-32 h-32 mx-auto mb-6 bg-white/20 rounded-full flex items-center justify-center">
+                                        <i class="fa fa-paint-brush text-5xl text-accent"></i>
+                                    </div>
+                                    <h3 class="text-2xl font-bold text-shadow">创意无限</h3>
+                                    <p class="text-white/80 mt-2">用色彩点亮生活</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 浮动装饰元素 -->
+                    <div class="absolute -top-4 -right-4 w-16 h-16 bg-secondary/40 rounded-full blur-sm floating-delay-1"></div>
+                    <div class="absolute -bottom-4 -left-4 w-20 h-20 bg-accent/40 rounded-full blur-sm floating-delay-2"></div>
+                    <div class="absolute top-1/2 -left-8 w-12 h-12 bg-primary/40 rounded-full blur-sm"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 关于我们部分 -->
+    <section id="about" class="py-20 relative overflow-hidden">
+        <!-- 背景装饰 -->
+        <div class="absolute inset-0 bg-gradient-to-br from-secondary/20 to-primary/20"></div>
+        <div class="absolute top-10 right-10 w-72 h-72 bg-accent/10 rounded-full filter blur-3xl"></div>
+        <div class="absolute bottom-10 left-10 w-96 h-96 bg-primary/10 rounded-full filter blur-3xl"></div>
+        
+        <div class="container mx-auto px-4 md:px-8 relative z-10">
+            <div class="text-center mb-16 scroll-animate">
+                <h2 class="text-[clamp(2rem,5vw,3.5rem)] font-bold mb-6">
+                    关于<span class="text-accent">我们</span>
+                </h2>
+                <p class="text-[clamp(1rem,2.5vw,1.3rem)] text-white/80 max-w-3xl mx-auto">蓝莓酱工作室成立于2024年，是一个由热爱艺术和创作的年轻人组成的团队。我们致力于将想象力转化为有趣的作品，带给大家快乐和启发。</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 text-center hover:bg-white/15 transition-all card-hover scroll-animate slideInLeft">
+                    <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-accent/40 to-primary/40 rounded-full flex items-center justify-center">
+                        <i class="fa fa-heart text-3xl text-accent"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">我们的热爱</h3>
+                    <p class="text-white/80">我们热爱艺术，热爱创作，热爱用双手打造美好。无论是画画、做手工还是设计，每一份作品都倾注了我们的热情和心血。</p>
+                </div>
+                
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 text-center hover:bg-white/15 transition-all card-hover scroll-animate fadeInScale">
+                    <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-secondary/40 to-primary/40 rounded-full flex items-center justify-center">
+                        <i class="fa fa-lightbulb text-3xl text-accent"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">创新精神</h3>
+                    <p class="text-white/80">我们不断探索新的创作方式和表达形式，将传统艺术与现代技术相结合，创造出独具特色的作品。</p>
+                </div>
+                
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 text-center hover:bg-white/15 transition-all card-hover scroll-animate slideInRight">
+                    <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-primary/40 to-secondary/40 rounded-full flex items-center justify-center">
+                        <i class="fa fa-star text-3xl text-accent"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">追求卓越</h3>
+                    <p class="text-white/80">我们对每一份作品都精益求精，追求完美的细节和卓越的品质，努力为大家呈现最好的视觉体验。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 我们会做什么部分 -->
+    <section id="services" class="py-20 relative overflow-hidden">
+        <div class="container mx-auto px-4 md:px-8">
+            <div class="text-center mb-16 scroll-animate">
+                <h2 class="text-[clamp(2rem,5vw,3.5rem)] font-bold mb-6">
+                    我们会做<span class="text-accent">什么</span>
+                </h2>
+                <p class="text-[clamp(1rem,2.5vw,1.3rem)] text-white/80 max-w-3xl mx-auto">我们提供多种艺术创作服务，从插画设计到手工制作，满足不同客户的需求。</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 text-center hover:bg-white/15 transition-all card-hover scroll-animate slideInLeft">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-accent/40 to-primary/40 rounded-full flex items-center justify-center">
+                        <i class="fa fa-pencil text-2xl text-accent"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">插画设计</h3>
+                    <p class="text-white/70 text-sm">数字绘画、角色设计、绘本创作等</p>
+                </div>
+                
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 text-center hover:bg-white/15 transition-all card-hover scroll-animate slideInUp">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-secondary/40 to-primary/40 rounded-full flex items-center justify-center">
+                        <i class="fa fa-scissors text-2xl text-accent"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">手工制作</h3>
+                    <p class="text-white/70 text-sm">手工饰品、纸艺、陶艺等创意手工制品</p>
+                </div>
+                
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 text-center hover:bg-white/15 transition-all card-hover scroll-animate slideInUp">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-primary/40 to-secondary/40 rounded-full flex items-center justify-center">
+                        <i class="fa fa-palette text-2xl text-accent"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">数字艺术</h3>
+                    <p class="text-white/70 text-sm">数字绘画、概念设计、UI设计等</p>
+                </div>
+                
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 text-center hover:bg-white/15 transition-all card-hover scroll-animate slideInRight">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-accent/40 to-secondary/40 rounded-full flex items-center justify-center">
+                        <i class="fa fa-brush text-2xl text-accent"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">传统绘画</h3>
+                    <p class="text-white/70 text-sm">水彩画、油画、素描等传统艺术创作</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 蓝莓酱综合社区部分 -->
+    <section id="projects" class="py-20 relative overflow-hidden">
+        <div class="container mx-auto px-4 md:px-8">
+            <div class="text-center mb-16 scroll-animate">
+                <h2 class="text-[clamp(2rem,5vw,3.5rem)] font-bold mb-6">
+                    蓝莓酱<span class="text-accent">综合社区</span>
+                </h2>
+                <p class="text-[clamp(1rem,2.5vw,1.3rem)] text-white/80 max-w-3xl mx-auto">展示我们精心准备的艺术社区，希望能带给你灵感和快乐。</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <a href="lanmeijiang.studio.codetown.explore.html" class="block bg-white/10 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/20 hover:bg-white/15 transition-all card-hover scroll-animate slideInLeft">
+                    <div class="h-48 bg-gradient-to-br from-accent/40 to-primary/40 flex items-center justify-center">
+                        <i class="fa fa-code text-6xl text-white/60"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-3">编程小镇</h3>
+                        <p class="text-white/70 text-sm mb-4">一个充满创造力的编程社区，学习编程技能，分享创意项目。</p>
+                    </div>
+                </a>
+                
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/20 hover:bg-white/15 transition-all card-hover scroll-animate fadeInScale">
+                    <div class="h-48 bg-gradient-to-br from-secondary/40 to-primary/40 flex items-center justify-center">
+                        <i class="fa fa-cube text-6xl text-white/60"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-3">手工饰品系列</h3>
+                        <p class="text-white/70 text-sm mb-4">精美的手工饰品，每一件都是独一无二的艺术品。</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 bg-secondary/20 text-secondary rounded-full text-xs">手工</span>
+                            <span class="px-3 py-1 bg-accent/20 text-accent rounded-full text-xs">饰品</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/20 hover:bg-white/15 transition-all card-hover scroll-animate slideInRight">
+                    <div class="h-48 bg-gradient-to-br from-primary/40 to-secondary/40 flex items-center justify-center">
+                        <i class="fa fa-paint-brush text-6xl text-white/60"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-3">水彩风景画</h3>
+                        <p class="text-white/70 text-sm mb-4">用细腻的水彩技法描绘自然风景，传递宁静与美好。</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 bg-primary/20 text-primary rounded-full text-xs">水彩</span>
+                            <span class="px-3 py-1 bg-accent/20 text-accent rounded-full text-xs">风景</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <a href="lanmeijiang.studio.codetown.explore.html" id="block-runner-card" class="block bg-white/10 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/20 hover:bg-white/15 transition-all card-hover scroll-animate slideInLeft">
+                    <div class="h-48 bg-gradient-to-br from-accent/40 to-secondary/40 flex items-center justify-center relative overflow-hidden">
+                        <i class="fa fa-gamepad text-6xl text-white/60"></i>
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
+                        <div class="absolute bottom-4 left-4 right-4">
+                            <span class="px-3 py-1 bg-accent text-dark rounded-full text-xs font-bold">热门游戏</span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-3">方块跑酷</h3>
+                        <p class="text-white/70 text-sm mb-4">一个充满挑战的跑酷游戏，测试你的反应速度和操作技巧！</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 bg-accent/20 text-accent rounded-full text-xs">游戏</span>
+                            <span class="px-3 py-1 bg-secondary/20 text-secondary rounded-full text-xs">Scratch</span>
+                        </div>
+                    </div>
+                </a>
+                
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/20 hover:bg-white/15 transition-all card-hover scroll-animate fadeInScale">
+                    <div class="h-48 bg-gradient-to-br from-secondary/40 to-accent/40 flex items-center justify-center">
+                        <i class="fa fa-music text-6xl text-white/60"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-3">原创音乐</h3>
+                        <p class="text-white/70 text-sm mb-4">工作室成员创作的原创音乐作品，风格多样，充满创意。</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 bg-secondary/20 text-secondary rounded-full text-xs">音乐</span>
+                            <span class="px-3 py-1 bg-primary/20 text-primary rounded-full text-xs">原创</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/20 hover:bg-white/15 transition-all card-hover scroll-animate slideInRight">
+                    <div class="h-48 bg-gradient-to-br from-primary/40 to-accent/40 flex items-center justify-center">
+                        <i class="fa fa-book text-6xl text-white/60"></i>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-3">绘本故事</h3>
+                        <p class="text-white/70 text-sm mb-4">原创绘本故事，用图画和文字讲述温暖人心的故事。</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-3 py-1 bg-primary/20 text-primary rounded-full text-xs">绘本</span>
+                            <span class="px-3 py-1 bg-accent/20 text-accent rounded-full text-xs">故事</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 工作室成员部分 -->
+    <section id="team" class="py-20 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-secondary/20 to-primary/20"></div>
+        <div class="absolute top-20 left-20 w-64 h-64 bg-accent/10 rounded-full filter blur-3xl"></div>
+        <div class="absolute bottom-20 right-20 w-80 h-80 bg-primary/10 rounded-full filter blur-3xl"></div>
+        
+        <div class="container mx-auto px-4 md:px-8 relative z-10">
+            <div class="text-center mb-16 scroll-animate">
+                <h2 class="text-[clamp(2rem,5vw,3.5rem)] font-bold mb-6">
+                    工作室<span class="text-accent">成员</span>
+                </h2>
+                <p class="text-[clamp(1rem,2.5vw,1.3rem)] text-white/80 max-w-3xl mx-auto">认识我们才华横溢的团队成员，每一位都是各自领域的专家。</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-5 gap-8">
+                <!-- 成员1: 蓝莓酱 -->
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 text-center hover:bg-white/15 transition-all card-hover scroll-animate slideInLeft">
+                    <div class="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden border-4 border-blue-500/30">
+                        <img src="蓝莓酱.png" alt="蓝莓酱" class="w-full h-full object-cover" onerror="this.src='https://picsum.photos/seed/blueberry/100/100'">
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">蓝莓酱</h3>
+                    <p class="text-blue-400 text-sm mb-3">蓝莓酱工作室创始人</p>
+                    <p class="text-white/70 text-sm mb-4">经常搞些有的没的</p>
+                    <div class="flex justify-center space-x-3">
+                        <a href="#" class="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center hover:bg-blue-400/20 transition-all">
+                            <i class="fa fa-weibo text-blue-400"></i>
+                        </a>
+                        <a href="#" class="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center hover:bg-blue-400/20 transition-all">
+                            <i class="fa fa-instagram text-blue-400"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 成员2: 草莓酱 -->
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 text-center hover:bg-white/15 transition-all card-hover scroll-animate slideInUp">
+                    <div class="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden border-4 border-pink-500/30">
+                        <img src="草莓酱.png" alt="草莓酱" class="w-full h-full object-cover" onerror="this.src='https://picsum.photos/seed/strawberry/100/100'">
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">草莓酱</h3>
+                    <p class="text-pink-400 text-sm mb-3">喜欢和蓝莓酱一起玩</p>
+                    <p class="text-white/70 text-sm mb-4">画画、手工</p>
+                    <div class="flex justify-center space-x-3">
+                        <a href="#" class="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center hover:bg-pink-400/20 transition-all">
+                            <i class="fa fa-weibo text-pink-400"></i>
+                        </a>
+                        <a href="#" class="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center hover:bg-pink-400/20 transition-all">
+                            <i class="fa fa-instagram text-pink-400"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 成员3: 抹茶酱 -->
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 text-center hover:bg-white/15 transition-all card-hover scroll-animate slideInUp">
+                    <div class="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden border-4 border-green-500/30">
+                        <img src="抹茶酱.png" alt="抹茶酱" class="w-full h-full object-cover" onerror="this.src='https://picsum.photos/seed/matcha/100/100'">
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">抹茶酱</h3>
+                    <p class="text-green-400 text-sm mb-3">一个“普通”的酱？</p>
+                    <p class="text-white/70 text-sm mb-4">左右横跳主力军</p>
+                    <div class="flex justify-center space-x-3">
+                        <a href="#" class="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center hover:bg-green-400/20 transition-all">
+                            <i class="fa fa-github text-green-400"></i>
+                        </a>
+                        <a href="#" class="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center hover:bg-green-400/20 transition-all">
+                            <i class="fa fa-code text-green-400"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 成员4: 白巧酱 -->
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 text-center hover:bg-white/15 transition-all card-hover scroll-animate slideInUp">
+                    <div class="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden border-4 border-white/30">
+                        <img src="白巧酱.png" alt="白巧酱" class="w-full h-full object-cover" onerror="this.src='https://picsum.photos/seed/whitechoco/100/100'">
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">白巧酱</h3>
+                    <p class="text-white text-sm mb-3">文案 / 策划</p>
+                    <p class="text-white/70 text-sm mb-4">负责故事创作和项目策划</p>
+                    <div class="flex justify-center space-x-3">
+                        <a href="#" class="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center hover:bg-white/20 transition-all">
+                            <i class="fa fa-weibo text-white"></i>
+                        </a>
+                        <a href="#" class="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center hover:bg-white/20 transition-all">
+                            <i class="fa fa-pencil text-white"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- 成员5: 柠檬酱 -->
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 text-center hover:bg-white/15 transition-all card-hover scroll-animate slideInRight">
+                    <div class="w-24 h-24 mx-auto mb-4 rounded-full overflow-hidden border-4 border-yellow-400/30">
+                        <img src="柠檬酱.png" alt="柠檬酱" class="w-full h-full object-cover" onerror="this.src='https://picsum.photos/seed/lemon/100/100'">
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">柠檬酱</h3>
+                    <p class="text-yellow-400 text-sm mb-3">摄影师 / 导演</p>
+                    <p class="text-white/70 text-sm mb-4">记录精彩瞬间，Action！</p>
+                    <div class="flex justify-center space-x-3">
+                        <a href="#" class="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center hover:bg-yellow-400/20 transition-all">
+                            <i class="fa fa-camera text-yellow-400"></i>
+                        </a>
+                        <a href="#" class="w-8 h-8 bg-white/10 rounded-full flex items-center justify-center hover:bg-yellow-400/20 transition-all">
+                            <i class="fa fa-video-camera text-yellow-400"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12 scroll-animate">
+                <a href="#contact" class="inline-flex items-center gap-2 bg-accent hover:bg-accent/90 text-dark px-8 py-3 rounded-full font-medium transition-all bounce-hover text-lg btn-enhanced">
+                    <i class="fa fa-user-plus"></i>
+                    申请加入我们
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系我们部分 -->
+    <section id="contact" class="py-20 relative overflow-hidden">
+        <div class="container mx-auto px-4 md:px-8">
+            <div class="text-center mb-16 scroll-animate">
+                <h2 class="text-[clamp(2rem,5vw,3.5rem)] font-bold mb-6">
+                    联系<span class="text-accent">我们</span>
+                </h2>
+                <p class="text-[clamp(1rem,2.5vw,1.3rem)] text-white/80 max-w-3xl mx-auto">有任何问题或合作意向？欢迎随时联系我们！</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
+                <div class="space-y-6 scroll-animate slideInLeft">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-accent/20 rounded-full flex items-center justify-center">
+                            <i class="fa fa-envelope text-accent text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold">邮箱</h3>
+                            <p class="text-white/70">hello@lanmeijiang.studio</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center">
+                            <i class="fa fa-phone text-primary text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold">电话</h3>
+                            <p class="text-white/70">+86 138 0000 0000</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-secondary/20 rounded-full flex items-center justify-center">
+                            <i class="fa fa-map-marker text-secondary text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold">地址</h3>
+                            <p class="text-white/70">创意园区A座101室</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex space-x-4 pt-6">
+                        <a href="#" class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center hover:bg-accent/20 transition-all magnetic">
+                            <i class="fa fa-weibo text-xl text-accent"></i>
+                        </a>
+                        <a href="#" class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center hover:bg-accent/20 transition-all magnetic">
+                            <i class="fa fa-wechat text-xl text-accent"></i>
+                        </a>
+                        <a href="#" class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center hover:bg-accent/20 transition-all magnetic">
+                            <i class="fa fa-instagram text-xl text-accent"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 scroll-animate slideInRight">
+                    <form class="space-y-6">
+                        <div>
+                            <label class="block text-base font-medium mb-2">姓名</label>
+                            <input type="text" class="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-accent" placeholder="请输入你的姓名">
+                        </div>
+                        <div>
+                            <label class="block text-base font-medium mb-2">邮箱</label>
+                            <input type="email" class="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-accent" placeholder="请输入你的邮箱">
+                        </div>
+                        <div>
+                            <label class="block text-base font-medium mb-2">消息</label>
+                            <textarea rows="4" class="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-accent" placeholder="请输入你的消息"></textarea>
+                        </div>
+                        <button type="submit" class="bg-accent hover:bg-accent/90 text-dark w-full px-6 py-3 rounded-full font-medium transition-all bounce-hover text-lg btn-enhanced">
+                            发送消息
+                            <i class="fa fa-paper-plane ml-2"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="py-12 bg-dark/30 backdrop-blur-sm">
+        <div class="container mx-auto px-4 md:px-8">
+            <div class="text-center">
+                <div class="flex items-center justify-center space-x-2 mb-4">
+                    <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
+                        <i class="fa fa-paint-brush text-lg text-accent"></i>
+                    </div>
+                    <span class="text-xl font-bold">蓝莓酱工作室</span>
+                </div>
+                <p class="text-white/60 text-sm mb-4">用创意点亮生活，用艺术温暖人心</p>
+                <p class="text-white/40 text-xs">© 2024 蓝莓酱工作室. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 登录窗口 -->
+    <style>
+        #loginModalContent {
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        
+        /* 修复按钮选择器 */
+        button.login-button {
+            position: relative;
+        }
+    </style>
+    <div id="loginModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center hidden">
+        <div class="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 p-8 max-w-md w-full mx-4 transform transition-all scale-95 opacity-0" id="loginModalContent">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold">登录</h3>
+                <button id="closeLoginModal" class="text-white/70 hover:text-white text-2xl transition-all">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            
+            <!-- 登录方式切换 -->
+            <div class="flex mb-6 login-tabs">
+                <button id="accountLoginTab" class="flex-1 py-2 text-center font-medium rounded-l-lg bg-accent/20 text-accent transition-all">用户名密码</button>
+                <button id="phoneLoginTab" class="flex-1 py-2 text-center font-medium rounded-r-lg bg-transparent text-white/70 hover:text-white/90 transition-all">手机验证码</button>
+            </div>
+            
+            <form id="loginForm" class="space-y-6">
+                <!-- 用户名密码登录 -->
+                <div class="login-method" id="accountLogin">
+                    <div>
+                        <label class="block text-base font-medium mb-2">用户名</label>
+                        <input type="text" id="username" class="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-accent text-lg" placeholder="请输入用户名">
+                    </div>
+                    <div>
+                        <label class="block text-base font-medium mb-2">密码</label>
+                        <input type="password" id="password" class="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-accent text-lg" placeholder="请输入密码">
+                    </div>
+                    <div class="flex items-center">
+                        <label class="flex items-center gap-2 text-white/80 text-base">
+                            <input type="checkbox" class="w-4 h-4 rounded bg-white/10 border-white/20 text-accent focus:ring-accent">
+                            <span>记住密码</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- 手机验证码登录 -->
+                <div class="login-method hidden" id="phoneLogin">
+                    <div>
+                        <label class="block text-base font-medium mb-2">手机号</label>
+                        <input type="tel" id="phone" class="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-accent text-lg" placeholder="请输入手机号">
+                    </div>
+                    <div class="flex gap-3">
+                        <div class="flex-1">
+                            <label class="block text-base font-medium mb-2">验证码</label>
+                            <input type="text" id="verificationCode" class="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-accent text-lg" placeholder="请输入验证码">
+                        </div>
+                        <div class="flex-shrink-0">
+                            <label class="block text-base font-medium mb-2 invisible">验证码</label>
+                            <button type="button" id="sendCodeBtn" class="w-full bg-primary hover:bg-primary/90 text-white px-4 py-3 rounded-lg font-medium transition-all text-base">发送验证码</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="bg-accent hover:bg-accent/90 text-dark w-full px-6 py-3 rounded-full font-medium transition-all bounce-hover text-lg">
+                    登录
+                </button>
+            </form>
+            
+            <div class="mt-6 text-center text-white/80 text-base">
+                还没有账号？ <a href="#" class="text-accent hover:text-accent/80 transition-all">申请加入蓝莓酱工作室</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 导航栏相关逻辑
+            const navbar = document.getElementById('navbar');
+            const menuBtn = document.getElementById('menuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            // 移动菜单切换
+            if (menuBtn && mobileMenu) {
+                menuBtn.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                    const icon = menuBtn.querySelector('i');
+                    if (mobileMenu.classList.contains('hidden')) {
+                        icon.classList.replace('fa-times', 'fa-bars');
+                    } else {
+                        icon.classList.replace('fa-bars', 'fa-times');
+                    }
+                });
+            }
+            
+            // 滚动时导航栏样式变化
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('py-2', 'shadow-lg');
+                    navbar.classList.remove('py-4');
+                } else {
+                    navbar.classList.add('py-4');
+                    navbar.classList.remove('py-2', 'shadow-lg');
+                }
+            });
+            
+            // 平滑滚动到锚点
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                        // 关闭移动菜单
+                        if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                            mobileMenu.classList.add('hidden');
+                            const icon = menuBtn.querySelector('i');
+                            icon.classList.replace('fa-times', 'fa-bars');
+                        }
+                    }
+                });
+            });
+            
+            // 滚动触发动画
+            const scrollAnimateElements = document.querySelectorAll('.scroll-animate');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+            
+            scrollAnimateElements.forEach(element => {
+                observer.observe(element);
+            });
+            
+            // 粒子效果
+            const particlesBg = document.getElementById('particles-bg');
+            if (particlesBg) {
+                const createParticle = () => {
+                    const particle = document.createElement('div');
+                    particle.classList.add('particle');
+                    
+                    // 随机大小和位置
+                    const size = Math.random() * 5 + 2;
+                    const left = Math.random() * 100;
+                    const top = Math.random() * 100;
+                    const delay = Math.random() * 4;
+                    const duration = Math.random() * 3 + 3;
+                    
+                    particle.style.width = `${size}px`;
+                    particle.style.height = `${size}px`;
+                    particle.style.left = `${left}%`;
+                    particle.style.top = `${top}%`;
+                    particle.style.animationDelay = `${delay}s`;
+                    particle.style.animationDuration = `${duration}s`;
+                    
+                    particlesBg.appendChild(particle);
+                    
+                    // 一段时间后移除粒子
+                    setTimeout(() => {
+                        if (particle.parentNode) {
+                            particle.parentNode.removeChild(particle);
+                        }
+                    }, (delay + duration) * 1000);
+                };
+                
+                // 初始创建一些粒子
+                for (let i = 0; i < 20; i++) {
+                    createParticle();
+                }
+                
+                // 定时创建粒子
+                setInterval(createParticle, 500);
+            }
+            
+            // 星空背景
+            const starsContainer = document.querySelector('.stars');
+            if (starsContainer) {
+                for (let i = 0; i < 100; i++) {
+                    const star = document.createElement('div');
+                    star.classList.add('star');
+                    star.style.left = `${Math.random() * 100}%`;
+                    star.style.top = `${Math.random() * 100}%`;
+                    star.style.animationDelay = `${Math.random() * 2}s`;
+                    star.style.animationDuration = `${Math.random() * 3 + 2}s`;
+                    starsContainer.appendChild(star);
+                }
+            }
+            
+            // 波纹效果
+            document.querySelectorAll('.ripple-effect').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    const ripple = document.createElement('div');
+                    ripple.classList.add('ripple');
+                    
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    const x = e.clientX - rect.left - size / 2;
+                    const y = e.clientY - rect.top - size / 2;
+                    
+                    ripple.style.width = ripple.style.height = `${size}px`;
+                    ripple.style.left = `${x}px`;
+                    ripple.style.top = `${y}px`;
+                    
+                    this.appendChild(ripple);
+                    
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                });
+            });
+            
+            // 登录窗口
+            const loginButtons = document.querySelectorAll('.login-button');
+            const loginModal = document.getElementById('loginModal');
+            const loginModalContent = document.getElementById('loginModalContent');
+            const closeLoginModal = document.getElementById('closeLoginModal');
+            const loginForm = document.getElementById('loginForm');
+            
+            // 登录方式切换
+            const accountLoginTab = document.getElementById('accountLoginTab');
+            const phoneLoginTab = document.getElementById('phoneLoginTab');
+            const accountLogin = document.getElementById('accountLogin');
+            const phoneLogin = document.getElementById('phoneLogin');
+            const currentLoginMethod = { type: 'account' };
+            
+            // 验证码相关
+            const sendCodeBtn = document.getElementById('sendCodeBtn');
+            const verificationCode = document.getElementById('verificationCode');
+            const phone = document.getElementById('phone');
+            let currentCode = '';
+            let countdown = 0;
+            let countdownTimer = null;
+            
+            // 登录方式切换功能
+            accountLoginTab.addEventListener('click', () => {
+                if (currentLoginMethod.type !== 'account') {
+                    accountLoginTab.classList.add('bg-accent/20', 'text-accent');
+                    accountLoginTab.classList.remove('text-white/70', 'hover:text-white/90');
+                    phoneLoginTab.classList.remove('bg-accent/20', 'text-accent');
+                    phoneLoginTab.classList.add('text-white/70', 'hover:text-white/90');
+                    accountLogin.classList.remove('hidden');
+                    phoneLogin.classList.add('hidden');
+                    currentLoginMethod.type = 'account';
+                }
+            });
+            
+            phoneLoginTab.addEventListener('click', () => {
+                if (currentLoginMethod.type !== 'phone') {
+                    phoneLoginTab.classList.add('bg-accent/20', 'text-accent');
+                    phoneLoginTab.classList.remove('text-white/70', 'hover:text-white/90');
+                    accountLoginTab.classList.remove('bg-accent/20', 'text-accent');
+                    accountLoginTab.classList.add('text-white/70', 'hover:text-white/90');
+                    phoneLogin.classList.remove('hidden');
+                    accountLogin.classList.add('hidden');
+                    currentLoginMethod.type = 'phone';
+                }
+            });
+            
+            // 发送验证码功能
+            sendCodeBtn.addEventListener('click', () => {
+                const phoneNumber = phone.value.trim();
+                
+                // 手机号验证
+                if (!/^1[3-9]\d{9}$/.test(phoneNumber)) {
+                    alert('请输入正确的手机号');
+                    return;
+                }
+                
+                // 开始倒计时
+                startCountdown();
+                
+                // 生成随机验证码
+                currentCode = Math.floor(100000 + Math.random() * 900000).toString();
+                
+                // 调用真实的短信发送API
+                sendSms(phoneNumber, currentCode).then(() => {
+                    alert(`验证码已发送到${phoneNumber}，请注意查收短信`);
+                }).catch((error) => {
+                    console.error('短信发送失败:', error);
+                    alert('短信发送失败，请稍后重试');
+                    // 发送失败后重置按钮状态
+                    clearInterval(countdownTimer);
+                    sendCodeBtn.disabled = false;
+                    sendCodeBtn.classList.remove('opacity-70', 'cursor-not-allowed');
+                    sendCodeBtn.textContent = '发送验证码';
+                });
+            });
+            
+            // 发送短信函数（模拟真实API调用）
+            function sendSms(phoneNumber, code) {
+                return new Promise((resolve, reject) => {
+                    // 模拟网络延迟
+                    setTimeout(() => {
+                        try {
+                            // 这里是真实环境下调用短信服务商API的代码
+                            // 示例：使用阿里云短信服务
+                            /*
+                            const client = new SmsClient({
+                                accessKeyId: 'your-access-key-id',
+                                secretAccessKey: 'your-secret-access-key',
+                                endpoint: 'dysmsapi.aliyuncs.com'
+                            });
+                            
+                            await client.sendSms({
+                                PhoneNumbers: phoneNumber,
+                                SignName: '蓝莓酱工作室',
+                                TemplateCode: 'SMS_123456789',
+                                TemplateParam: JSON.stringify({code: code})
+                            });
+                            */
+                            
+                            // 模拟成功响应
+                            console.log(`真实发送验证码到${phoneNumber}，验证码：${code}`);
+                            resolve();
+                        } catch (error) {
+                            // 模拟失败响应
+                            console.error('短信发送API调用失败:', error);
+                            reject(error);
+                        }
+                    }, 1000);
+                });
+            }
+            
+            // 倒计时功能
+            function startCountdown() {
+                countdown = 60;
+                sendCodeBtn.disabled = true;
+                sendCodeBtn.classList.add('opacity-70', 'cursor-not-allowed');
+                sendCodeBtn.textContent = `${countdown}秒后重发`;
+                
+                if (countdownTimer) {
+                    clearInterval(countdownTimer);
+                }
+                
+                countdownTimer = setInterval(() => {
+                    countdown--;
+                    sendCodeBtn.textContent = `${countdown}秒后重发`;
+                    
+                    if (countdown <= 0) {
+                        clearInterval(countdownTimer);
+                        sendCodeBtn.disabled = false;
+                        sendCodeBtn.classList.remove('opacity-70', 'cursor-not-allowed');
+                        sendCodeBtn.textContent = '发送验证码';
+                    }
+                }, 1000);
+            }
+            
+            // 登录按钮点击事件
+            loginButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    loginModal.classList.remove('hidden');
+                    setTimeout(() => {
+                        loginModalContent.classList.remove('scale-95', 'opacity-0');
+                        loginModalContent.classList.add('scale-100', 'opacity-100');
+                    }, 10);
+                });
+            });
+            
+            const closeModal = () => {
+                loginModalContent.classList.remove('scale-100', 'opacity-100');
+                loginModalContent.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    loginModal.classList.add('hidden');
+                }, 300);
+            };
+            
+            closeLoginModal.addEventListener('click', closeModal);
+            
+            loginModal.addEventListener('click', (e) => {
+                if (e.target === loginModal) {
+                    closeModal();
+                }
+            });
+            
+            // 登录表单提交逻辑
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                if (currentLoginMethod.type === 'account') {
+                    // 用户名密码登录
+                    const username = document.getElementById('username').value.trim();
+                    const password = document.getElementById('password').value.trim();
+                    
+                    if (!username || !password) {
+                        alert('请输入用户名和密码');
+                        return;
+                    }
+                    
+                    // 这里可以添加真实的登录API调用
+                    console.log('用户名密码登录:', username, password);
+                    alert('登录成功！');
+                    closeModal();
+                } else {
+                    // 手机验证码登录
+                    const phoneNumber = phone.value.trim();
+                    const code = verificationCode.value.trim();
+                    
+                    if (!phoneNumber) {
+                        alert('请输入手机号');
+                        return;
+                    }
+                    
+                    if (!code) {
+                        alert('请输入验证码');
+                        return;
+                    }
+                    
+                    if (!/^1[3-9]\d{9}$/.test(phoneNumber)) {
+                        alert('请输入正确的手机号');
+                        return;
+                    }
+                    
+                    if (code !== currentCode) {
+                        alert('验证码错误');
+                        return;
+                    }
+                    
+                    // 这里可以添加真实的登录API调用
+                    console.log('手机验证码登录:', phoneNumber, code);
+                    alert('登录成功！');
+                    closeModal();
+                }
+            });
+            
+            // 清理资源
+            closeLoginModal.addEventListener('click', () => {
+                if (countdownTimer) {
+                    clearInterval(countdownTimer);
+                }
+            });
+            
+            loginModal.addEventListener('click', (e) => {
+                if (e.target === loginModal) {
+                    if (countdownTimer) {
+                        clearInterval(countdownTimer);
+                    }
+                }
+            });
+            
+            // 查看作品按钮
+            const viewWorksBtn = document.getElementById('view-works-btn');
+            if (viewWorksBtn) {
+                viewWorksBtn.addEventListener('click', () => {
+                    const projectsSection = document.getElementById('projects');
+                    if (projectsSection) {
+                        projectsSection.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            }
+            
+            // 了解更多按钮
+            const aboutBtn = document.getElementById('about-btn');
+            if (aboutBtn) {
+                aboutBtn.addEventListener('click', () => {
+                    const aboutSection = document.getElementById('about');
+                    if (aboutSection) {
+                        aboutSection.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            }
+            
+            // 方块跑酷游戏卡片点击事件
+            const blockRunnerCard = document.getElementById('block-runner-card');
+            if (blockRunnerCard) {
+                blockRunnerCard.addEventListener('click', () => {
+                    alert('方块跑酷游戏开发中，敬请期待！');
+                });
+            }
+            
+            // 联系表单提交
+            const contactForm = document.querySelector('#contact form');
+            if (contactForm) {
+                contactForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    // 这里可以添加表单提交逻辑
+                    alert('消息发送成功！我们会尽快回复您。');
+                    contactForm.reset();
+                });
+            }
+        });
+    </script>
+</body>
+</html>
